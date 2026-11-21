@@ -38,12 +38,26 @@
 
 ## 🚀 Quick Start
 
+### ⚠️ IMPORTANT: Install Dependencies First!
+
+```bash
+# Clone repository
+git clone https://github.com/thimy00732-ctrl/baichonguyen.git
+cd baichonguyen
+
+# ⚠️ REQUIRED: Install dependencies
+npm install
+```
+
+**Common Error:** `Cannot find module 'express'`  
+**Solution:** Run `npm install` first!
+
 ### Option 1: Demo Mode (No Database Required)
 
 Perfect for testing and development.
 
 ```bash
-# 1. Install dependencies
+# 1. Install dependencies (REQUIRED!)
 npm install
 
 # 2. Start demo server

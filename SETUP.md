@@ -1,192 +1,224 @@
-# 🚀 HƯỚNG DẪN CHẠY DỰ ÁN
+# 🚀 Setup Guide - AlumniNet
 
-## ⚠️ Yêu Cầu Cài Đặt
+## ⚠️ Common Issue: "Cannot find module 'express'"
 
-### 1. Cài MongoDB
-
-**Tải MongoDB Community Edition:**
-https://www.mongodb.com/try/download/community
-
-**Chọn:**
-- Version: Latest
-- Platform: Windows
-- Package: MSI
-
-**Sau khi cài đặt:**
-```powershell
-# Khởi động MongoDB
-net start MongoDB
-
-# Hoặc nếu cài không có service:
-"C:\Program Files\MongoDB\Server\8.0\bin\mongod.exe" --dbpath="C:\data\db"
-```
-
-**Kiểm tra MongoDB đã chạy:**
-```powershell
-mongosh
-# Nếu kết nối được là OK
-```
-
-### 2. Đã Cài Node.js
-```powershell
-node --version
-# Phải >= 16.x
-```
-
----
-
-## 📦 CÀI ĐẶT DỰ ÁN
-
-### Bước 1: Cài Dependencies (Đã xong)
-```powershell
-cd d:\Baichonguyen
+### Solution:
+```bash
+# Install dependencies first!
 npm install
 ```
 
-### Bước 2: Kiểm Tra File .env
-File `.env` phải có nội dung:
-```
-PORT=5000
-MONGODB_URI=mongodb://localhost:27017/alumni-student-network
-JWT_SECRET=your_jwt_secret_key_change_in_production
-JWT_EXPIRE=7d
-NODE_ENV=development
-```
-
-### Bước 3: Import Data Mẫu vào MongoDB
-```powershell
-node seedData.js
-```
-
-**Nếu thành công, bạn sẽ thấy:**
-```
-✅ Seed data completed successfully!
-```
-
-### Bước 4: Chạy Server
-```powershell
-npm start
-# Hoặc development mode:
-npm run dev
-```
-
-**Nếu thành công, bạn sẽ thấy:**
-```
-✅ MongoDB connected
-🚀 Server running on http://localhost:5000
-```
-
-### Bước 5: Truy Cập Website
-Mở trình duyệt: http://localhost:5000
+**Always run `npm install` after:**
+- Cloning the repository
+- Pulling new code
+- Switching branches
 
 ---
 
-## 🔑 TÀI KHOẢN TEST
+## 📦 Quick Setup
 
-| Vai trò | Email | Password |
-|---------|-------|----------|
-| **Admin** | admin@university.edu.vn | admin123 |
-| **Sinh viên** | student1@university.edu.vn | student123 |
-| **Cựu sinh viên** | alumni1@company.com | alumni123 |
-| **Nhà tuyển dụng** | hr@fpt.com.vn | recruiter123 |
+### 1️⃣ Clone Repository
+```bash
+git clone https://github.com/thimy00732-ctrl/baichonguyen.git
+cd baichonguyen
+```
+
+### 2️⃣ Install Dependencies ⚠️ **REQUIRED**
+```bash
+npm install
+```
+
+This installs all required packages:
+- express
+- mongoose
+- cors
+- bcryptjs
+- jsonwebtoken
+- dotenv
+- etc.
+
+### 3️⃣ Choose Mode
+
+#### Option A: Demo Mode (No Database)
+```bash
+npm run demo
+# or
+node server-demo.js
+```
+
+**Features:**
+- ✅ No MongoDB required
+- ✅ Works immediately
+- ✅ Mock data included
+- ✅ Perfect for testing UI
+- ❌ Data doesn't persist
+
+**Access:** http://localhost:5000
+
+**Login:** Any email + any password
 
 ---
 
-## 🐛 XỬ LÝ LỖI
-
-### Lỗi: MongoDB connection error
-**Nguyên nhân:** MongoDB chưa chạy
-
-**Giải pháp:**
-```powershell
-# Khởi động MongoDB service
+#### Option B: Full Mode (With MongoDB)
+```bash
+# 1. Start MongoDB
 net start MongoDB
 
-# Hoặc kiểm tra MongoDB có chạy không:
-tasklist | findstr mongod
+# 2. Create .env file
+# Copy .env.example to .env and configure:
+MONGODB_URI=mongodb://localhost:27017/alumninetwork
+JWT_SECRET=your-secret-key-here
+PORT=5000
+
+# 3. Seed database (first time only)
+npm run seed
+
+# 4. Start server
+npm start
+# or
+node server.js
 ```
 
-### Lỗi: Port 5000 already in use
-**Giải pháp 1:** Thay đổi PORT trong file `.env`
+**Features:**
+- ✅ Real database
+- ✅ Data persists
+- ✅ All features enabled
+- ✅ Production-ready
+
+**Access:** http://localhost:5000
+
+**Login with seeded accounts:**
+- Admin: `admin@example.com` / `admin123`
+- Student: `student@example.com` / `student123`
+- Alumni: `alumni@example.com` / `alumni123`
+- Recruiter: `recruiter@example.com` / `recruiter123`
+
+---
+
+## 🛠️ Troubleshooting
+
+### Problem: "Cannot find module 'express'"
+**Solution:**
+```bash
+npm install
 ```
+
+### Problem: "Port 5000 already in use"
+**Solution:**
+```bash
+# Kill existing Node processes
+taskkill /F /IM node.exe
+
+# Or change port in .env
 PORT=3000
 ```
 
-**Giải pháp 2:** Kill process đang chiếm port 5000
-```powershell
-netstat -ano | findstr :5000
-taskkill /PID <PID_NUMBER> /F
+### Problem: "MongoDB connection failed"
+**Solution:**
+```bash
+# Check if MongoDB is running
+net start MongoDB
+
+# Or use demo mode instead
+npm run demo
 ```
 
-### Lỗi: Cannot find module
-**Giải pháp:**
-```powershell
-rm -r node_modules
-rm package-lock.json
-npm install
-```
+### Problem: "npm not found"
+**Solution:**
+- Install Node.js from https://nodejs.org/
+- Restart terminal after installation
 
-### Lỗi: JWT token invalid
-**Giải pháp:** Clear localStorage trong browser
-- Mở Developer Tools (F12)
-- Console tab
-- Gõ: `localStorage.clear()`
-- Refresh trang
+### Problem: Git CRLF warnings
+**Solution:**
+```bash
+# Normal, safe to ignore
+# Or configure Git:
+git config --global core.autocrlf true
+```
 
 ---
 
-## 📂 CẤU TRÚC DỰ ÁN
+## 📁 Project Files Structure
 
 ```
-d:\Baichonguyen\
-├── models/              # MongoDB Schemas (13 files)
-├── routes/              # API Routes (7 files)
-├── middleware/          # Auth middleware
-├── public/              # Frontend
-│   ├── index.html
-│   ├── css/style.css
+baichonguyen/
+├── node_modules/        ⚠️ Required (run npm install)
+├── public/              Frontend files
+│   ├── index.html       (Handshake design)
+│   ├── css/
+│   │   └── style.css    (Handshake CSS)
 │   └── js/
 │       ├── api.js
-│       └── app.js
-├── server.js            # Main server file
-├── seedData.js          # Data seeding script
-├── .env                 # Environment variables
-└── package.json
+│       ├── app.js
+│       └── handshake-render.js
+├── routes/              API routes
+├── models/              Database models
+├── middleware/          Auth & validation
+├── server.js            Main server (MongoDB)
+├── server-demo.js       Demo server (No DB)
+├── package.json         Dependencies list
+└── .env                 Config (create from .env.example)
 ```
 
 ---
 
-## ✅ KIỂM TRA HỆ THỐNG
+## 🔧 NPM Scripts
 
-### 1. Kiểm tra MongoDB
-```powershell
-mongosh
-use alumni-student-network
-show collections
-db.users.countDocuments()
+```bash
+npm start       # Start full server (MongoDB required)
+npm run demo    # Start demo server (No DB needed)
+npm run dev     # Start with nodemon (auto-restart)
+npm run seed    # Seed database with sample data
 ```
-
-### 2. Kiểm tra Server
-```powershell
-# Terminal 1: Chạy server
-npm start
-
-# Terminal 2: Test API
-curl http://localhost:5000/api/auth/login -X POST -H "Content-Type: application/json" -d "{\"email\":\"student1@university.edu.vn\",\"password\":\"student123\"}"
-```
-
-### 3. Kiểm tra Frontend
-- Mở: http://localhost:5000
-- Click "Đăng Nhập"
-- Nhập: student1@university.edu.vn / student123
-- Nếu vào được Dashboard = OK!
 
 ---
 
-## 📞 HỖ TRỢ
+## ✅ Verification Checklist
 
-Nếu gặp lỗi khác:
-1. Kiểm tra MongoDB có chạy: `mongosh`
-2. Kiểm tra PORT 5000 có bị chiếm: `netstat -ano | findstr :5000`
-3. Xem log lỗi trong terminal
-4. Kiểm tra file .env có đúng format không
+After setup, verify:
+
+- [ ] `node_modules/` folder exists
+- [ ] `npm install` ran successfully
+- [ ] Server starts without errors
+- [ ] Can access http://localhost:5000
+- [ ] Can see Handshake design
+- [ ] Can login (demo mode: any email/password)
+
+---
+
+## 🆘 Still Having Issues?
+
+1. **Check Node.js version:**
+   ```bash
+   node --version
+   # Should be v14+ or higher
+   ```
+
+2. **Clear npm cache:**
+   ```bash
+   npm cache clean --force
+   rm -rf node_modules
+   npm install
+   ```
+
+3. **Check for typos in commands:**
+   - Use `npm install` not `npm instal`
+   - Use `node server-demo.js` not `node server-demo`
+
+4. **Read error messages carefully:**
+   - "Cannot find module" → Run `npm install`
+   - "Port in use" → Kill Node processes
+   - "MongoDB error" → Use demo mode instead
+
+---
+
+## 📞 Support
+
+If problems persist:
+- Check [README.md](./README.md) for full documentation
+- Review [HANDSHAKE-DESIGN.md](./HANDSHAKE-DESIGN.md) for design docs
+- Open an issue on GitHub
+
+---
+
+**Remember: Always run `npm install` first! 🎯**

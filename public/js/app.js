@@ -206,8 +206,131 @@ function timKiemHero() {
 
 // ===== VIỆC LÀM =====
 function nhanLoaiViec(loai) {
-  const map = { 'Internship':'🎓 Thực tập', 'Full-time':'⏰ Toàn thời gian', 'Part-time':'🕐 Bán thời gian' };
+  const map = { 'Internship':'Internship', 'Full-time':'Full-time', 'Part-time':'Part-time' };
   return map[loai] || loai;
+}
+
+function batTatFormViec() {
+  const form = document.getElementById('formViecLam');
+  if (form) form.classList.toggle('an');
+}
+
+function batTatFormBai() {
+  const form = document.getElementById('formBaiViet');
+  if (form) form.classList.toggle('an');
+}
+
+function batTatDangKyMentor() {
+  alert('Feature đăng ký mentor đang được phát triển');
+}
+
+function batTatThongBao() {
+  const dropdown = document.getElementById('hopThongBao');
+  if (dropdown) dropdown.classList.toggle('an');
+}
+
+function anFormMentor() {
+  const form = document.getElementById('formYeuCauMentor');
+  if (form) form.classList.add('an');
+}
+
+function moFormYeuCauMentor(alumniId, tenMentor) {
+  const form = document.getElementById('formYeuCauMentor');
+  if (form) {
+    form.classList.remove('an');
+    document.getElementById('alumniIdYeuCau').value = alumniId;
+    form.scrollIntoView({ behavior: 'smooth' });
+  }
+}
+
+async function guiYeuCauMentor() {
+  const alumniId = document.getElementById('alumniIdYeuCau').value;
+  const chuDe = document.getElementById('chuDeMentor').value.trim();
+  const noiDung = document.getElementById('noiDungMentor').value.trim();
+  
+  if (!chuDe || !noiDung) return hienToast('Vui lòng điền đầy đủ thông tin', 'loi');
+  
+  const kq = await guiYeuCauMentorAPI({ alumniId, topic: chuDe, message: noiDung });
+  if (kq) {
+    hienToast('Đã gửi yêu cầu mentor thành công!');
+    anFormMentor();
+    document.getElementById('chuDeMentor').value = '';
+    document.getElementById('noiDungMentor').value = '';
+  } else {
+    hienToast('Gửi yêu cầu thất bại', 'loi');
+  }
+}
+
+function hienFormSuaHoSo() {
+  const formHien = document.getElementById('hienThiHoSo');
+  const formSua = document.getElementById('formSuaHoSo');
+  if (formHien && formSua) {
+    formHien.classList.toggle('an');
+    formSua.classList.toggle('an');
+  }
+}
+
+async function capNhatHoSo() {
+  const data = {
+    fullName: document.getElementById('suaTen')?.value,
+    studentId: document.getElementById('suaMSSV')?.value,
+    major: document.getElementById('suaNganh')?.value,
+    graduationYear: document.getElementById('suaNam')?.value,
+    currentCompany: document.getElementById('suaCongTy')?.value,
+    jobTitle: document.getElementById('suaChucVu')?.value,
+    phone: document.getElementById('suaDienThoai')?.value,
+    linkedIn: document.getElementById('suaLinkedIn')?.value,
+    skills: document.getElementById('suaSkills')?.value?.split(',').map(s => s.trim()),
+    bio: document.getElementById('suaBio')?.value
+  };
+  
+  const kq = await capNhatHoSoAPI(data);
+  if (kq) {
+    hienToast('Cập nhật hồ sơ thành công!');
+    hienFormSuaHoSo();
+    taiHoSo();
+  } else {
+    hienToast('Cập nhật thất bại', 'loi');
+  }
+}
+
+async function taiHoSo() {
+  const kq = await layThongTinToiAPI();
+  if (!kq) return;
+  
+  const profile = kq.profile || {};
+  
+  // Update display elements
+  if (document.getElementById('hosoTen')) document.getElementById('hosoTen').textContent = profile.fullName || 'Chưa cập nhật';
+  if (document.getElementById('hosoEmail')) document.getElementById('hosoEmail').textContent = kq.user?.email || '';
+  if (document.getElementById('avatarLon')) document.getElementById('avatarLon').textContent = (profile.fullName || 'U').charAt(0).toUpperCase();
+  
+  // Profile info
+  if (document.getElementById('tt-ten')) document.getElementById('tt-ten').textContent = profile.fullName || '--';
+  if (document.getElementById('tt-email')) document.getElementById('tt-email').textContent = kq.user?.email || '--';
+  if (document.getElementById('tt-mssv')) document.getElementById('tt-mssv').textContent = profile.studentId || '--';
+  if (document.getElementById('tt-nganh')) document.getElementById('tt-nganh').textContent = profile.major || '--';
+  if (document.getElementById('tt-nam')) document.getElementById('tt-nam').textContent = profile.graduationYear || '--';
+  if (document.getElementById('tt-congty')) document.getElementById('tt-congty').textContent = profile.currentCompany || '--';
+  if (document.getElementById('tt-chucvu')) document.getElementById('tt-chucvu').textContent = profile.jobTitle || '--';
+  if (document.getElementById('tt-dienthoai')) document.getElementById('tt-dienthoai').textContent = profile.phone || '--';
+  
+  // Fill form
+  if (document.getElementById('suaTen')) document.getElementById('suaTen').value = profile.fullName || '';
+  if (document.getElementById('suaMSSV')) document.getElementById('suaMSSV').value = profile.studentId || '';
+  if (document.getElementById('suaNganh')) document.getElementById('suaNganh').value = profile.major || '';
+  if (document.getElementById('suaNam')) document.getElementById('suaNam').value = profile.graduationYear || '';
+  if (document.getElementById('suaCongTy')) document.getElementById('suaCongTy').value = profile.currentCompany || '';
+  if (document.getElementById('suaChucVu')) document.getElementById('suaChucVu').value = profile.jobTitle || '';
+  if (document.getElementById('suaDienThoai')) document.getElementById('suaDienThoai').value = profile.phone || '';
+  if (document.getElementById('suaLinkedIn')) document.getElementById('suaLinkedIn').value = profile.linkedIn || '';
+  if (document.getElementById('suaSkills')) document.getElementById('suaSkills').value = (profile.skills || []).join(', ');
+  if (document.getElementById('suaBio')) document.getElementById('suaBio').value = profile.bio || '';
+}
+
+function taiDuLieuAdmin() {
+  // Admin features placeholder
+  console.log('Admin dashboard loaded');
 }
 
 function tinhHanNop(deadline) {
