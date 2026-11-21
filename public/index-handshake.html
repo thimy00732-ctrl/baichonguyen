@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AlumniNet – Kết Nối Cơ Hội Nghề Nghiệp</title>
+  <link rel="stylesheet" href="/css/handshake-style.css">
+</head>
+<body>
+
+<!-- ===== AUTH PAGE ===== -->
+<div id="trang-auth" class="trang active">
+  <div class="auth-wrapper">
+    <!-- Left Side - Brand & Features -->
+    <div class="auth-left">
+      <div class="auth-left-content">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:48px">
+          <span style="font-size:48px">🎓</span>
+          <span style="font-size:32px;font-weight:700">AlumniNet</span>
+        </div>
+        
+        <h1>The career network for students & alumni</h1>
+        <p>Connect with 1M+ companies, discover personalized job matches, and build relationships that move your career forward.</p>
+        
+        <div class="auth-features">
+          <div class="auth-feature">
+            <div class="auth-feature-icon">💼</div>
+            <div class="auth-feature-content">
+              <h3>Discover opportunities</h3>
+              <p>Access exclusive jobs and internships from top employers.</p>
+            </div>
+          </div>
+          <div class="auth-feature">
+            <div class="auth-feature-icon">🤝</div>
+            <div class="auth-feature-content">
+              <h3>Connect with mentors</h3>
+              <p>Learn from alumni who've been where you want to go.</p>
+            </div>
+          </div>
+          <div class="auth-feature">
+            <div class="auth-feature-icon">🚀</div>
+            <div class="auth-feature-content">
+              <h3>Grow your career</h3>
+              <p>Build skills, get advice, and land your dream job.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Right Side - Auth Forms -->
+    <div class="auth-right">
+      <!-- Login Form -->
+      <div id="formDangNhap" class="auth-form-container">
+        <h2>Welcome back</h2>
+        <p class="subtitle">Sign in to continue your journey</p>
+        
+        <div class="form-group">
+          <label>Email address</label>
+          <input type="email" id="emailDangNhap" placeholder="your.email@university.edu">
+        </div>
+        
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="matKhauDangNhap" placeholder="Enter your password" onkeydown="if(event.key==='Enter') dangNhap()">
+        </div>
+        
+        <button class="btn btn-primary" style="width:100%;margin-top:8px" onclick="dangNhap()">
+          Sign in
+        </button>
+        
+        <div class="auth-toggle">
+          Don't have an account? <a onclick="chuyenForm()">Sign up</a>
+        </div>
+      </div>
+      
+      <!-- Register Form -->
+      <div id="formDangKy" class="auth-form-container an">
+        <h2>Create account</h2>
+        <p class="subtitle">Join thousands of students and alumni</p>
+        
+        <div class="form-group">
+          <label>Full name</label>
+          <input type="text" id="hoTenDangKy" placeholder="Nguyen Van A">
+        </div>
+        
+        <div class="form-group">
+          <label>Email address</label>
+          <input type="email" id="emailDangKy" placeholder="your.email@university.edu">
+        </div>
+        
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="matKhauDangKy" placeholder="At least 6 characters">
+        </div>
+        
+        <div class="form-group">
+          <label>I am a</label>
+          <select id="vaiTroDangKy">
+            <option value="">-- Select your role --</option>
+            <option value="Student">🎓 Student</option>
+            <option value="Alumni">👨‍💼 Alumni</option>
+            <option value="Recruiter">🏢 Recruiter</option>
+          </select>
+        </div>
+        
+        <button class="btn btn-primary" style="width:100%;margin-top:8px" onclick="dangKy()">
+          Create account
+        </button>
+        
+        <div class="auth-toggle">
+          Already have an account? <a onclick="chuyenForm()">Sign in</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MAIN APP ===== -->
+<div id="ungDung" class="an">
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="container navbar-inner">
+      <a class="navbar-logo" onclick="hienTrang('trang-chu')">
+        <span class="logo-icon">🎓</span>
+        <span>AlumniNet</span>
+      </a>
+      
+      <ul class="nav-menu">
+        <li><a id="nav-trang-chu" onclick="hienTrang('trang-chu')">Home</a></li>
+        <li><a id="nav-viec-lam" onclick="hienTrang('viec-lam')">💼 Jobs</a></li>
+        <li><a id="nav-cong-dong" onclick="hienTrang('cong-dong')">💬 Community</a></li>
+        <li><a id="nav-mentor" onclick="hienTrang('mentor')">🤝 Mentors</a></li>
+        <li><a id="nav-ho-so" onclick="hienTrang('ho-so')">Profile</a></li>
+        <li id="nav-quantri-li" class="an"><a id="nav-quantri" onclick="hienTrang('quantri')">⚙️ Admin</a></li>
+      </ul>
+      
+      <div class="nav-phai">
+        <div class="nav-thongbao" onclick="batTatThongBao()">
+          🔔
+          <span class="thongbao-cham an" id="chamThongBao"></span>
+        </div>
+        
+        <div class="nav-nguoidung">
+          <div class="avatar-nho" id="avatarNhoBienThuc">U</div>
+          <span id="tenNguoiDung" style="font-weight:500;font-size:14px">User</span>
+        </div>
+        
+        <button class="btn-dangxuat" onclick="dangXuat()">Sign out</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="content-wrapper">
+    
+    <!-- ===== HOME PAGE ===== -->
+    <div id="trang-chu" class="trang">
+      <!-- Hero Section -->
+      <section class="hero-modern">
+        <div class="container">
+          <div class="hero-content">
+            <h1>
+              Let's find<br>
+              <span class="highlight">your next job</span>
+            </h1>
+            <p>1M+ companies ready to hire. 100+ opportunities across all levels. Connect with the largest career network for students and alumni.</p>
+            
+            <div class="search-bar-large">
+              <input type="text" id="timKiemHero" placeholder="🔍  Search for jobs, companies, mentors...">
+              <button onclick="timKiemHero()">Search</button>
+            </div>
+            
+            <div class="hero-stats">
+              <div class="hero-stat">
+                <span class="number" id="heroTongNguoi">--</span>
+                <span class="label">Members</span>
+              </div>
+              <div class="hero-stat">
+                <span class="number" id="heroTongViec">--</span>
+                <span class="label">Jobs</span>
+              </div>
+              <div class="hero-stat">
+                <span class="number" id="heroTongBai">--</span>
+                <span class="label">Posts</span>
+              </div>
+              <div class="hero-stat">
+                <span class="number" id="heroTongMentor">--</span>
+                <span class="label">Mentors</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Featured Jobs -->
+      <section class="section">
+        <div class="container">
+          <div class="section-header">
+            <h2>Featured opportunities</h2>
+            <p>Hand-picked jobs from top companies hiring on AlumniNet</p>
+          </div>
+          
+          <div id="viecLamTrangChu" class="card-grid">
+            <div class="loading-spinner">
+              <div class="spinner"></div>
+              <span style="margin-left:16px">Loading jobs...</span>
+            </div>
+          </div>
+          
+          <div style="text-align:center;margin-top:32px">
+            <button class="btn btn-secondary" onclick="hienTrang('viec-lam')">
+              View all jobs →
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- How it works -->
+      <section class="section" style="background:var(--gray-50)">
+        <div class="container">
+          <div class="section-header">
+            <h2>How AlumniNet works</h2>
+            <p>Your path to career success starts here</p>
+          </div>
+          
+          <div class="card-grid">
+            <div class="card" style="cursor:default">
+              <div class="card-icon" style="background:linear-gradient(135deg,#3B82F6,#1E40AF);color:white">1</div>
+              <h3 style="margin:16px 0 8px;font-size:20px;font-weight:600">Create your profile</h3>
+              <p style="color:var(--gray-600);line-height:1.6">Build a profile that showcases your skills, experience, and career goals.</p>
+            </div>
+            
+            <div class="card" style="cursor:default">
+              <div class="card-icon" style="background:linear-gradient(135deg,#10B981,#059669);color:white">2</div>
+              <h3 style="margin:16px 0 8px;font-size:20px;font-weight:600">Discover opportunities</h3>
+              <p style="color:var(--gray-600);line-height:1.6">Get personalized job recommendations based on your interests and qualifications.</p>
+            </div>
+            
+            <div class="card" style="cursor:default">
+              <div class="card-icon" style="background:linear-gradient(135deg,#F59E0B,#D97706);color:white">3</div>
+              <h3 style="margin:16px 0 8px;font-size:20px;font-weight:600">Connect & apply</h3>
+              <p style="color:var(--gray-600);line-height:1.6">Reach out to mentors, network with alumni, and apply with confidence.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Featured Posts -->
+      <section class="section">
+        <div class="container">
+          <div class="section-header">
+            <h2>Latest from the community</h2>
+            <p>Stories, advice, and insights from students and alumni</p>
+          </div>
+          
+          <div id="baiVietTrangChu" class="card-grid">
+            <div class="loading-spinner">
+              <div class="spinner"></div>
+              <span style="margin-left:16px">Loading posts...</span>
+            </div>
+          </div>
+          
+          <div style="text-align:center;margin-top:32px">
+            <button class="btn btn-secondary" onclick="hienTrang('cong-dong')">
+              View all posts →
+            </button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ===== JOBS PAGE ===== -->
+    <div id="viec-lam" class="trang">
+      <section class="section">
+        <div class="container">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:32px">
+            <div>
+              <h1 style="font-size:36px;font-weight:700;margin-bottom:8px">Browse jobs</h1>
+              <p style="color:var(--gray-600)">Explore opportunities from 1000+ companies</p>
+            </div>
+            <button class="btn btn-primary" onclick="batTatFormViec()">
+              + Post a job
+            </button>
+          </div>
+
+          <!-- Filter Bar -->
+          <div class="filter-bar">
+            <div class="filter-row">
+              <div class="filter-item" style="flex:2">
+                <label>Search</label>
+                <input type="text" id="timKiemViec" placeholder="Job title, keywords..." oninput="debounceTimKiemViec()">
+              </div>
+              <div class="filter-item">
+                <label>Job type</label>
+                <select id="loaiViecLoc" onchange="taiDanhSachViec()">
+                  <option value="">All types</option>
+                  <option value="Internship">Internship</option>
+                  <option value="Full-time">Full-time</option>
+                  <option value="Part-time">Part-time</option>
+                </select>
+              </div>
+              <div class="filter-item">
+                <label>Location</label>
+                <input type="text" id="diaDiemViecLoc" placeholder="City or remote" oninput="debounceTimKiemViec()">
+              </div>
+              <button class="btn btn-ghost btn-sm" onclick="xoaTimKiemViec()" style="align-self:flex-end">
+                Clear
+              </button>
+            </div>
+            <div class="ket-qua-timkiem" id="ketQuaViec" style="display:none;margin-top:16px;font-size:14px;color:var(--gray-600)">
+              <span class="so-ket-qua" id="soKetQuaViec">0</span> jobs found
+            </div>
+          </div>
+
+          <!-- Job Form -->
+          <div id="formViecLam" class="card an" style="margin-bottom:24px;cursor:default">
+            <h3 style="font-size:24px;font-weight:600;margin-bottom:24px">Post a new job</h3>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+              <div class="form-group">
+                <label>Job title *</label>
+                <input type="text" id="tieuDeViec" placeholder="e.g. Frontend Developer - Fresher">
+              </div>
+              <div class="form-group">
+                <label>Position *</label>
+                <input type="text" id="viTriViec" placeholder="e.g. Frontend Developer">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Job description *</label>
+              <textarea id="moTaViec" placeholder="Describe the role and responsibilities..."></textarea>
+            </div>
+            <div class="form-group">
+              <label>Requirements *</label>
+              <textarea id="yeuCauViec" placeholder="Required skills and experience..."></textarea>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+              <div class="form-group">
+                <label>Job type *</label>
+                <select id="hinhThucViec">
+                  <option value="">-- Select --</option>
+                  <option value="Internship">Internship</option>
+                  <option value="Full-time">Full-time</option>
+                  <option value="Part-time">Part-time</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Location *</label>
+                <input type="text" id="diaDiemViec" placeholder="e.g. Hanoi, Remote">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Benefits</label>
+              <textarea id="quyenLoiViec" placeholder="Salary, insurance, bonuses..."></textarea>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+              <div class="form-group">
+                <label>Application method *</label>
+                <input type="text" id="cachUngTuyenViec" placeholder="Email or application link">
+              </div>
+              <div class="form-group">
+                <label>Deadline *</label>
+                <input type="datetime-local" id="hanViec">
+              </div>
+            </div>
+            <div style="display:flex;gap:12px;margin-top:8px">
+              <button class="btn btn-primary" onclick="taoViecLam()">Post job</button>
+              <button class="btn btn-ghost" onclick="batTatFormViec()">Cancel</button>
+            </div>
+          </div>
+
+          <!-- Job List -->
+          <div id="danhSachViec" class="card-grid">
+            <div class="loading-spinner">
+              <div class="spinner"></div>
+              <span style="margin-left:16px">Loading jobs...</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ===== COMMUNITY PAGE ===== -->
+    <div id="cong-dong" class="trang">
+      <section class="section">
+        <div class="container">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:32px">
+            <div>
+              <h1 style="font-size:36px;font-weight:700;margin-bottom:8px">Community</h1>
+              <p style="color:var(--gray-600)">Share experiences, ask questions, and connect</p>
+            </div>
+            <button class="btn btn-primary" onclick="batTatFormBai()">
+              + New post
+            </button>
+          </div>
+
+          <!-- Filter -->
+          <div class="filter-bar">
+            <div class="filter-row">
+              <div class="filter-item" style="flex:2">
+                <label>Search</label>
+                <input type="text" id="timKiemBai" placeholder="Search posts..." oninput="debounceTimKiemBai()">
+              </div>
+              <div class="filter-item">
+                <label>Category</label>
+                <select id="danhMucBaiLoc" onchange="taiDanhSachBai()">
+                  <option value="">All categories</option>
+                  <option value="Experience">💡 Experience</option>
+                  <option value="Question">❓ Question</option>
+                  <option value="CareerAdvice">🎯 Career Advice</option>
+                  <option value="JobShare">💼 Job Share</option>
+                </select>
+              </div>
+              <button class="btn btn-ghost btn-sm" onclick="xoaTimKiemBai()" style="align-self:flex-end">
+                Clear
+              </button>
+            </div>
+            <div class="ket-qua-timkiem" id="ketQuaBai" style="display:none;margin-top:16px;font-size:14px;color:var(--gray-600)">
+              <span class="so-ket-qua" id="soKetQuaBai">0</span> posts found
+            </div>
+          </div>
+
+          <!-- Post Form -->
+          <div id="formBaiViet" class="card an" style="margin-bottom:24px;cursor:default">
+            <h3 style="font-size:24px;font-weight:600;margin-bottom:24px">Create a post</h3>
+            <div style="display:grid;grid-template-columns:1fr 2fr;gap:16px">
+              <div class="form-group">
+                <label>Category *</label>
+                <select id="danhMucBai">
+                  <option value="">-- Select --</option>
+                  <option value="Experience">💡 Experience</option>
+                  <option value="Question">❓ Question</option>
+                  <option value="CareerAdvice">🎯 Career Advice</option>
+                  <option value="JobShare">💼 Job Share</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Title *</label>
+                <input type="text" id="tieuDeBai" placeholder="Give your post a title...">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Content *</label>
+              <textarea id="noiDungBai" style="min-height:150px" placeholder="Share your story, question, or advice..."></textarea>
+            </div>
+            <div style="display:flex;gap:12px;margin-top:8px">
+              <button class="btn btn-primary" onclick="taoBaiViet()">Publish</button>
+              <button class="btn btn-ghost" onclick="batTatFormBai()">Cancel</button>
+            </div>
+          </div>
+
+          <!-- Post List -->
+          <div id="danhSachBai" class="card-grid">
+            <div class="loading-spinner">
+              <div class="spinner"></div>
+              <span style="margin-left:16px">Loading posts...</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ===== MENTORS PAGE ===== -->
+    <div id="mentor" class="trang">
+      <section class="section">
+        <div class="container">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:32px">
+            <div>
+              <h1 style="font-size:36px;font-weight:700;margin-bottom:8px">Find a mentor</h1>
+              <p style="color:var(--gray-600)">Connect with experienced alumni to guide your career</p>
+            </div>
+            <button class="btn btn-secondary" id="btnDangKyMentor" onclick="batTatDangKyMentor()">
+              Become a mentor
+            </button>
+          </div>
+
+          <!-- Filter -->
+          <div class="filter-bar">
+            <div class="filter-row">
+              <div class="filter-item" style="flex:2">
+                <label>Search</label>
+                <input type="text" id="timKiemMentor" placeholder="Name, company, field..." oninput="debounceTimKiemMentor()">
+              </div>
+              <div class="filter-item">
+                <label>Field of study</label>
+                <input type="text" id="chuyenNganhMentor" placeholder="e.g. Computer Science" oninput="debounceTimKiemMentor()">
+              </div>
+              <div class="filter-item">
+                <label>Skills</label>
+                <input type="text" id="kyNangMentor" placeholder="e.g. React, Python" oninput="debounceTimKiemMentor()">
+              </div>
+              <button class="btn btn-ghost btn-sm" onclick="xoaTimKiemMentor()" style="align-self:flex-end">
+                Clear
+              </button>
+            </div>
+            <div class="ket-qua-timkiem" id="ketQuaMentor" style="display:none;margin-top:16px;font-size:14px;color:var(--gray-600)">
+              <span class="so-ket-qua" id="soKetQuaMentor">0</span> mentors found
+            </div>
+          </div>
+
+          <!-- Request Form -->
+          <div id="formYeuCauMentor" class="card an" style="margin-bottom:24px;cursor:default">
+            <h3 style="font-size:24px;font-weight:600;margin-bottom:24px">Request mentorship</h3>
+            <input type="hidden" id="alumniIdYeuCau">
+            <div class="form-group">
+              <label>Topic *</label>
+              <input type="text" id="chuDeMentor" placeholder="e.g. Career guidance, CV review, Interview prep">
+            </div>
+            <div class="form-group">
+              <label>Message *</label>
+              <textarea id="noiDungMentor" placeholder="Tell the mentor what you need help with..."></textarea>
+            </div>
+            <div style="display:flex;gap:12px;margin-top:8px">
+              <button class="btn btn-primary" onclick="guiYeuCauMentor()">Send request</button>
+              <button class="btn btn-ghost" onclick="anFormMentor()">Cancel</button>
+            </div>
+          </div>
+
+          <!-- Mentor List -->
+          <div id="danhSachMentor" class="card-grid">
+            <div class="loading-spinner">
+              <div class="spinner"></div>
+              <span style="margin-left:16px">Loading mentors...</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ===== PROFILE PAGE ===== -->
+    <div id="ho-so" class="trang">
+      <section class="section">
+        <div class="container">
+          <div style="margin-bottom:32px">
+            <h1 style="font-size:36px;font-weight:700;margin-bottom:8px">My Profile</h1>
+            <p style="color:var(--gray-600)">Manage your information and track your activity</p>
+          </div>
+
+          <div class="profile-layout">
+            <!-- Sidebar -->
+            <div class="profile-sidebar">
+              <div class="profile-card">
+                <div class="profile-avatar-large" id="avatarLon">U</div>
+                <div class="profile-name" id="hosoTen">--</div>
+                <div class="profile-role" id="hosoVaiTro">--</div>
+                <div class="profile-email" id="hosoEmail">--</div>
+                
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
+                  <div style="text-align:center">
+                    <div style="font-size:24px;font-weight:700;color:var(--primary)" id="soUngTuyen">0</div>
+                    <div style="font-size:12px;color:var(--gray-600);margin-top:4px">Applications</div>
+                  </div>
+                  <div style="text-align:center">
+                    <div style="font-size:24px;font-weight:700;color:var(--primary)" id="soBaiViet">0</div>
+                    <div style="font-size:12px;color:var(--gray-600);margin-top:4px">Posts</div>
+                  </div>
+                </div>
+                
+                <button class="btn btn-secondary" style="width:100%" onclick="hienFormSuaHoSo()">
+                  Edit profile
+                </button>
+              </div>
+              
+              <!-- Applications Card -->
+              <div class="card" style="cursor:default">
+                <h3 style="font-size:16px;font-weight:600;margin-bottom:16px">My Applications</h3>
+                <div id="danhSachUngTuyenCuaToi">
+                  <p style="color:var(--gray-500);text-align:center;padding:16px">No applications yet</p>
+                </div>
+              </div>
+              
+              <!-- Mentor Requests -->
+              <div class="card" style="cursor:default">
+                <h3 style="font-size:16px;font-weight:600;margin-bottom:16px">Mentor Requests Sent</h3>
+                <div id="danhSachYeuCauMentor">
+                  <p style="color:var(--gray-500);text-align:center;padding:16px">No requests yet</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Main Content -->
+            <div>
+              <!-- Profile Info -->
+              <div class="card" id="hienThiHoSo" style="margin-bottom:24px;cursor:default">
+                <h3 style="font-size:20px;font-weight:600;margin-bottom:24px">Personal Information</h3>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+                  <div>
+                    <label style="display:block;font-size:12px;font-weight:500;color:var(--gray-600);margin-bottom:4px">Full name</label>
+                    <span id="tt-ten" style="font-weight:500">--</span>
+                  </div>
+                  <div>
+                    <label style="display:block;font-size:12px;font-weight:500;color:var(--gray-600);margin-bottom:4px">Email</label>
+                    <span id="tt-email" style="font-weight:500">--</span>
+                  </div>
+                  <div>
+                    <label style="display:block;font-size:12px;font-weight:500;color:var(--gray-600);margin-bottom:4px">Student ID</label>
+                    <span id="tt-mssv" style="font-weight:500">--</span>
+                  </div>
+                  <div>
+                    <label style="display:block;font-size:12px;font-weight:500;color:var(--gray-600);margin-bottom:4px">Major</label>
+                    <span id="tt-nganh" style="font-weight:500">--</span>
+                  </div>
+                  <div>
+                    <label style="display:block;font-size:12px;font-weight:500;color:var(--gray-600);margin-bottom:4px">Graduation year</label>
+                    <span id="tt-nam" style="font-weight:500">--</span>
+                  </div>
+                  <div>
+                    <label style="display:block;font-size:12px;font-weight:500;color:var(--gray-600);margin-bottom:4px">Company</label>
+                    <span id="tt-congty" style="font-weight:500">--</span>
+                  </div>
+                  <div>
+                    <label style="display:block;font-size:12px;font-weight:500;color:var(--gray-600);margin-bottom:4px">Position</label>
+                    <span id="tt-chucvu" style="font-weight:500">--</span>
+                  </div>
+                  <div>
+                    <label style="display:block;font-size:12px;font-weight:500;color:var(--gray-600);margin-bottom:4px">Phone</label>
+                    <span id="tt-dienthoai" style="font-weight:500">--</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Edit Form -->
+              <div class="card an" id="formSuaHoSo" style="cursor:default">
+                <h3 style="font-size:20px;font-weight:600;margin-bottom:24px">Edit Profile</h3>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+                  <div class="form-group">
+                    <label>Full name</label>
+                    <input type="text" id="suaTen">
+                  </div>
+                  <div class="form-group">
+                    <label>Student ID</label>
+                    <input type="text" id="suaMSSV">
+                  </div>
+                  <div class="form-group">
+                    <label>Major</label>
+                    <input type="text" id="suaNganh">
+                  </div>
+                  <div class="form-group">
+                    <label>Graduation year</label>
+                    <input type="number" id="suaNam" min="1900" max="2100">
+                  </div>
+                  <div class="form-group">
+                    <label>Company</label>
+                    <input type="text" id="suaCongTy">
+                  </div>
+                  <div class="form-group">
+                    <label>Position</label>
+                    <input type="text" id="suaChucVu">
+                  </div>
+                  <div class="form-group">
+                    <label>Phone</label>
+                    <input type="tel" id="suaDienThoai">
+                  </div>
+                  <div class="form-group">
+                    <label>LinkedIn</label>
+                    <input type="url" id="suaLinkedIn" placeholder="https://linkedin.com/in/...">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label>Skills (comma separated)</label>
+                  <input type="text" id="suaSkills" placeholder="React, Node.js, Python">
+                </div>
+                <div class="form-group">
+                  <label>Bio</label>
+                  <textarea id="suaBio" placeholder="Tell us about yourself..."></textarea>
+                </div>
+                <div style="display:flex;gap:12px;margin-top:8px">
+                  <button class="btn btn-primary" onclick="capNhatHoSo()">Save changes</button>
+                  <button class="btn btn-ghost" onclick="hienFormSuaHoSo()">Cancel</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Admin page placeholder -->
+    <div id="quantri" class="trang">
+      <section class="section">
+        <div class="container">
+          <h1 style="font-size:36px;font-weight:700;margin-bottom:32px">Admin Dashboard</h1>
+          <p style="color:var(--gray-600)">Admin features will be implemented here</p>
+        </div>
+      </section>
+    </div>
+
+  </div>
+</div>
+
+<!-- Toast Notification -->
+<div id="toast" class="toast">
+  <span id="toastIcon">✅</span>
+  <span id="toastText">Success!</span>
+</div>
+
+<!-- Scripts -->
+<script src="/js/api.js"></script>
+<script src="/js/app.js"></script>
+<script src="/js/handshake-render.js"></script>
+
+</body>
+</html>
