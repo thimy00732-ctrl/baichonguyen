@@ -1105,7 +1105,7 @@ document.addEventListener('click', e => {
 });
 
 // ===== EXPOSE FUNCTIONS TO GLOBAL SCOPE =====
-// Ð?m b?o functions có th? du?c g?i t? inline onclick
+// Expose functions so they can be called from inline onclick handlers
 window.dangNhap = dangNhap;
 window.dangKy = dangKy;
 window.dangXuat = dangXuat;
@@ -1117,7 +1117,6 @@ window.batTatFormBai = batTatFormBai;
 window.batTatDangKyMentor = batTatDangKyMentor;
 window.batTatThongBao = batTatThongBao;
 window.xemChiTietViec = xemChiTietViec;
-window.xemChiTietBai = xemChiTietBai;
 window.moFormYeuCauMentor = moFormYeuCauMentor;
 window.guiYeuCauMentor = guiYeuCauMentor;
 window.anFormMentor = anFormMentor;
@@ -1125,10 +1124,27 @@ window.taoViecLam = taoViecLam;
 window.taoBaiViet = taoBaiViet;
 window.thichBai = thichBai;
 window.hienFormSuaHoSo = hienFormSuaHoSo;
-window.capNhatHoSo = capNhatHoSo;
+window.anFormSuaHoSo = anFormSuaHoSo;
+window.luuHoSo = luuHoSo;
 window.debounceTimKiemViec = debounceTimKiemViec;
 window.debounceTimKiemBai = debounceTimKiemBai;
 window.debounceTimKiemMentor = debounceTimKiemMentor;
 window.xoaTimKiemViec = xoaTimKiemViec;
 window.xoaTimKiemBai = xoaTimKiemBai;
 window.xoaTimKiemMentor = xoaTimKiemMentor;
+window.chuyenTrangViec = chuyenTrangViec;
+window.dongModalChiTiet = dongModalChiTiet;
+window.moModalUngTuyen = moModalUngTuyen;
+window.dongModalUngTuyen = dongModalUngTuyen;
+window.guiHoSoUngTuyen = guiHoSoUngTuyen;
+window.baoCaoNoiDung = baoCaoNoiDung;
+window.batTatBinhLuan = batTatBinhLuan;
+window.guiBinhLuan = guiBinhLuan;
+window.phanHoiMentor = phanHoiMentor;
+window.rutHoSo = rutHoSo;
+window.chuyenTabAdmin = chuyenTabAdmin;
+window.duyetViec = duyetViec;
+window.tuChoiViec = tuChoiViec;
+window.duyetBai = duyetBai;
+window.xulyBaoCao = xulyBaoCao;
+window.khoaTaiKhoan = khoaTaiKhoan;
