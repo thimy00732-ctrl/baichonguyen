@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alumni Student Network - Kết nối Cựu Sinh Viên & Sinh Viên</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Navigation -->
+    <nav class="navbar">
+      <div class="container">
+        <div class="navbar-brand">
+          <h1>🎓 Alumni Network</h1>
+        </div>
+        <ul class="nav-menu" id="navMenu">
+          <li><a href="/" onclick="showPage('home', event)">Home</a></li>
+          <li><a href="/" onclick="showPage('jobs', event)">Việc Làm</a></li>
+          <li><a href="/" onclick="showPage('posts', event)">Cộng Đồng</a></li>
+          <li><a href="/" onclick="showPage('mentors', event)">Mentor</a></li>
+          <li><a href="/" onclick="showPage('profile', event)">Hồ Sơ</a></li>
+          <li><button onclick="logout()" class="btn-logout">Đăng Xuất</button></li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container main-content">
+      <!-- Login & Register Form -->
+      <div id="auth-page" class="page active">
+        <div class="auth-container">
+          <div class="auth-form" id="loginForm">
+            <h2>Đăng Nhập</h2>
+            <input type="email" id="loginEmail" placeholder="Email" required>
+            <input type="password" id="loginPassword" placeholder="Mật khẩu" required>
+            <button onclick="login()" class="btn btn-primary">Đăng Nhập</button>
+            <p>Chưa có tài khoản? <a href="#" onclick="toggleForm(event)">Đăng Ký</a></p>
+          </div>
+
+          <div class="auth-form hidden" id="registerForm">
+            <h2>Đăng Ký</h2>
+            <input type="email" id="regEmail" placeholder="Email" required>
+            <input type="password" id="regPassword" placeholder="Mật khẩu" required>
+            <input type="text" id="regFullName" placeholder="Họ và Tên" required>
+            <select id="regRole" required>
+              <option value="">-- Chọn vai trò --</option>
+              <option value="Student">Sinh Viên</option>
+              <option value="Alumni">Cựu Sinh Viên</option>
+              <option value="Recruiter">Nhà Tuyển Dụng</option>
+            </select>
+            <button onclick="register()" class="btn btn-primary">Đăng Ký</button>
+            <p>Đã có tài khoản? <a href="#" onclick="toggleForm(event)">Đăng Nhập</a></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Home Page -->
+      <div id="home-page" class="page">
+        <div class="hero">
+          <h2>Chào mừng đến Alumni Network</h2>
+          <p>Kết nối cựu sinh viên - sinh viên, chia sẻ kinh nghiệm và cơ hội nghề nghiệp</p>
+        </div>
+        <div class="stats">
+          <div class="stat-box">
+            <h3 id="totalUsers">--</h3>
+            <p>Người Dùng</p>
+          </div>
+          <div class="stat-box">
+            <h3 id="totalJobs">--</h3>
+            <p>Việc Làm</p>
+          </div>
+          <div class="stat-box">
+            <h3 id="totalPosts">--</h3>
+            <p>Bài Viết</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Jobs Page -->
+      <div id="jobs-page" class="page">
+        <h2>Cơ Hội Việc Làm & Thực Tập</h2>
+        
+        <div class="search-filter">
+          <input type="text" id="jobSearch" placeholder="Tìm kiếm công việc..." onkeyup="searchJobs()">
+          <select id="jobType" onchange="filterJobs()">
+            <option value="">Tất cả</option>
+            <option value="Internship">Thực Tập</option>
+            <option value="Full-time">Toàn thời gian</option>
+            <option value="Part-time">Bán thời gian</option>
+          </select>
+          <button onclick="showCreateJobForm()" class="btn btn-primary">+ Đăng Tin</button>
+        </div>
+
+        <!-- Create Job Form -->
+        <div id="createJobForm" class="form-container hidden">
+          <h3>Đăng Tin Tuyển Dụng</h3>
+          <input type="text" id="jobTitle" placeholder="Tiêu đề" required>
+          <input type="text" id="jobPosition" placeholder="Vị trí" required>
+          <textarea id="jobDescription" placeholder="Mô tả công việc" required></textarea>
+          <textarea id="jobRequirements" placeholder="Yêu cầu kỹ năng" required></textarea>
+          <select id="jobJobType" required>
+            <option value="">-- Hình thức --</option>
+            <option value="Internship">Thực Tập</option>
+            <option value="Full-time">Toàn thời gian</option>
+            <option value="Part-time">Bán thời gian</option>
+          </select>
+          <input type="text" id="jobLocation" placeholder="Địa điểm" required>
+          <textarea id="jobBenefits" placeholder="Quyền lợi"></textarea>
+          <input type="text" id="jobApplicationMethod" placeholder="Cách ứng tuyển / Link" required>
+          <input type="datetime-local" id="jobDeadline" required>
+          <button onclick="createJob()" class="btn btn-success">Đăng Tin</button>
+          <button onclick="hideCreateJobForm()" class="btn btn-secondary">Hủy</button>
+        </div>
+
+        <div id="jobsList" class="jobs-list"></div>
+      </div>
+
+      <!-- Posts Page -->
+      <div id="posts-page" class="page">
+        <h2>Cộng Đồng Chia Sẻ</h2>
+        
+        <div class="post-controls">
+          <button onclick="showCreatePostForm()" class="btn btn-primary">+ Viết Bài</button>
+          <select id="postCategory" onchange="filterPosts()">
+            <option value="">Tất cả</option>
+            <option value="Experience">Kinh Nghiệm</option>
+            <option value="Question">Câu Hỏi</option>
+            <option value="CareerAdvice">Tư Vấn Sự Nghiệp</option>
+            <option value="JobShare">Chia Sẻ Việc Làm</option>
+          </select>
+        </div>
+
+        <!-- Create Post Form -->
+        <div id="createPostForm" class="form-container hidden">
+          <h3>Viết Bài Mới</h3>
+          <select id="postPostCategory" required>
+            <option value="">-- Danh mục --</option>
+            <option value="Experience">Kinh Nghiệm</option>
+            <option value="Question">Câu Hỏi</option>
+            <option value="CareerAdvice">Tư Vấn Sự Nghiệp</option>
+            <option value="JobShare">Chia Sẻ Việc Làm</option>
+          </select>
+          <input type="text" id="postTitle" placeholder="Tiêu đề" required>
+          <textarea id="postContent" placeholder="Nội dung bài viết" required></textarea>
+          <button onclick="createPost()" class="btn btn-success">Đăng Bài</button>
+          <button onclick="hideCreatePostForm()" class="btn btn-secondary">Hủy</button>
+        </div>
+
+        <div id="postsList" class="posts-list"></div>
+      </div>
+
+      <!-- Mentors Page -->
+      <div id="mentors-page" class="page">
+        <h2>Tìm Mentor</h2>
+        
+        <div class="search-filter">
+          <input type="text" id="mentorSearch" placeholder="Tìm mentor..." onkeyup="searchMentors()">
+          <input type="text" id="mentorSkills" placeholder="Kỹ năng..." onkeyup="searchMentors()">
+        </div>
+
+        <div id="mentorsList" class="mentors-list"></div>
+      </div>
+
+      <!-- Profile Page -->
+      <div id="profile-page" class="page">
+        <h2>Hồ Sơ Cá Nhân</h2>
+        
+        <div id="profileInfo" class="profile-info"></div>
+        
+        <div id="editProfileForm" class="form-container hidden">
+          <h3>Chỉnh Sửa Hồ Sơ</h3>
+          <input type="text" id="profileFullName" placeholder="Họ và Tên" required>
+          <input type="text" id="profileMajor" placeholder="Chuyên ngành">
+          <input type="number" id="profileGraduationYear" placeholder="Năm tốt nghiệp">
+          <input type="text" id="profileCurrentCompany" placeholder="Công ty hiện tại">
+          <input type="text" id="profileJobTitle" placeholder="Chức danh">
+          <input type="text" id="profileSkills" placeholder="Kỹ năng (cách nhau bằng dấu phẩy)">
+          <textarea id="profileBio" placeholder="Giới thiệu"></textarea>
+          <label>
+            <input type="checkbox" id="profileIsMentorAvailable"> Sẵn sàng làm mentor
+          </label>
+          <button onclick="updateProfile()" class="btn btn-success">Lưu</button>
+          <button onclick="hideEditProfileForm()" class="btn btn-secondary">Hủy</button>
+        </div>
+      </div>
+
+      <!-- Admin Panel -->
+      <div id="admin-page" class="page hidden">
+        <h2>Bảng Điều Khiển Admin</h2>
+        
+        <div class="admin-tabs">
+          <button onclick="showAdminTab('jobs')" class="tab-btn">Duyệt Tin Tuyển Dụng</button>
+          <button onclick="showAdminTab('posts')" class="tab-btn">Duyệt Bài Viết</button>
+          <button onclick="showAdminTab('reports')" class="tab-btn">Báo Cáo Vi Phạm</button>
+          <button onclick="showAdminTab('stats')" class="tab-btn">Thống Kê</button>
+        </div>
+
+        <div id="admin-jobs" class="admin-tab"></div>
+        <div id="admin-posts" class="admin-tab"></div>
+        <div id="admin-reports" class="admin-tab"></div>
+        <div id="admin-stats" class="admin-tab"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>
