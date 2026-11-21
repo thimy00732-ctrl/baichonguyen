@@ -1103,3 +1103,32 @@ function dich_hanh_dong(hd) {
 document.addEventListener('click', e => {
   if (!e.target.closest('.nav-thongbao')) document.getElementById('hopThongBao')?.classList.add('an');
 });
+
+// ===== EXPOSE FUNCTIONS TO GLOBAL SCOPE =====
+// Ð?m b?o functions có th? du?c g?i t? inline onclick
+window.dangNhap = dangNhap;
+window.dangKy = dangKy;
+window.dangXuat = dangXuat;
+window.chuyenForm = chuyenForm;
+window.hienTrang = hienTrang;
+window.timKiemHero = timKiemHero;
+window.batTatFormViec = batTatFormViec;
+window.batTatFormBai = batTatFormBai;
+window.batTatDangKyMentor = batTatDangKyMentor;
+window.batTatThongBao = batTatThongBao;
+window.xemChiTietViec = xemChiTietViec;
+window.xemChiTietBai = xemChiTietBai;
+window.moFormYeuCauMentor = moFormYeuCauMentor;
+window.guiYeuCauMentor = guiYeuCauMentor;
+window.anFormMentor = anFormMentor;
+window.taoViecLam = taoViecLam;
+window.taoBaiViet = taoBaiViet;
+window.thichBai = thichBai;
+window.hienFormSuaHoSo = hienFormSuaHoSo;
+window.capNhatHoSo = capNhatHoSo;
+window.debounceTimKiemViec = debounceTimKiemViec;
+window.debounceTimKiemBai = debounceTimKiemBai;
+window.debounceTimKiemMentor = debounceTimKiemMentor;
+window.xoaTimKiemViec = xoaTimKiemViec;
+window.xoaTimKiemBai = xoaTimKiemBai;
+window.xoaTimKiemMentor = xoaTimKiemMentor;
