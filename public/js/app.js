@@ -328,11 +328,6 @@ async function taiHoSo() {
   if (document.getElementById('suaBio')) document.getElementById('suaBio').value = profile.bio || '';
 }
 
-function taiDuLieuAdmin() {
-  // Admin features placeholder
-  console.log('Admin dashboard loaded');
-}
-
 function tinhHanNop(deadline) {
   const now = new Date(), dl = new Date(deadline);
   const ngay = Math.ceil((dl - now) / 86400000);
@@ -540,6 +535,9 @@ function taoTheBai(bai) {
       <button class="nut-tuongtac" onclick="batTatBinhLuan('${bai._id}')">
         💬 <span id="soBinhLuan-${bai._id}">${bai.commentCount||0}</span> Bình luận
       </button>
+      <button class="nut-tuongtac" onclick="xemChiTietBai('${bai._id}')">
+        📖 Xem chi tiết
+      </button>
       <button class="nut-tuongtac" onclick="baoCaoNoiDung('Post','${bai._id}')">🚩 Báo cáo</button>
     </div>
 
@@ -553,10 +551,11 @@ function taoTheBai(bai) {
       <div class="form-binhluan">
         <div class="avatar-nho" id="avatarBL-${bai._id}">U</div>
         <div class="o-nhap-bl">
-          <input type="text" class="input-binhluan" id="inputBL-${bai._id}"
-            placeholder="Viết bình luận..."
-            onkeydown="if(event.key==='Enter' && !event.shiftKey) { event.preventDefault(); guiBinhLuan('${bai._id}'); }">
-          <button class="btn-gui-bl" onclick="guiBinhLuan('${bai._id}')">Gửi</button>
+          <textarea class="input-binhluan" id="inputBL-${bai._id}" rows="1"
+            placeholder="Viết bình luận... (Enter để gửi, Shift+Enter để xuống dòng)"
+            onkeydown="if(event.key==='Enter' && !event.shiftKey) { event.preventDefault(); guiBinhLuan('${bai._id}'); }"
+            oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"></textarea>
+          <button class="btn-gui-bl" onclick="guiBinhLuan('${bai._id}')">📤 Gửi</button>
         </div>
       </div>
     </div>
@@ -582,6 +581,144 @@ async function batTatBinhLuan(baiId) {
 }
 
 // Tải danh sách bình luận
+async function taiDanhSachBinhLuan(baiId) {
+  const container = document.getElementById('dsBL-' + baiId);
+  if (!container) return;
+
+  const kq = await layChiTietBaiAPI(baiId);
+  const binhLuans = kq?.comments || [];
+
+  if (binhLuans.length === 0) {
+    container.innerHTML = '<div style="text-align:center;color:var(--xam-5);padding:14px;font-size:13px">Chưa có bình luận nào. Hãy là người đầu tiên! 💬</div>';
+    return;
+  }
+
+  container.innerHTML = binhLuans.map(bl => {
+    const chu = bl.userId?.email?.charAt(0).toUpperCase() || 'U';
+    const isOwner = bl.userId?._id === nguoiDungHienTai?._id;
+    return `
+    <div class="muc-binhluan">
+      <div class="avatar-bl">${chu}</div>
+      <div class="noidung-bl">
+        <div class="ten-bl">${bl.userId?.email || 'Ẩn danh'}</div>
+        <div class="text-bl">${bl.content}</div>
+        <div class="thoigian-bl">
+          ${formatThoiGian(bl.createdAt)}
+          ${isOwner ? `<button class="btn-xoa-bl" onclick="xoaBinhLuan('${baiId}', '${bl._id}')">🗑️ Xóa</button>` : ''}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Cuộn xuống cuối danh sách bình luận
+  container.scrollTop = container.scrollHeight;
+}
+
+// Xóa bình luận
+async function xoaBinhLuan(baiId, commentId) {
+  if (!confirm('Bạn có chắc muốn xóa bình luận này?')) return;
+  
+  const kq = await xoaBinhLuanAPI(baiId, commentId);
+  if (kq && kq.message) {
+    hienToast('Đã xóa bình luận!');
+    await taiDanhSachBinhLuan(baiId);
+    // Cập nhật số lượng
+    const soEl = document.getElementById('soBinhLuan-' + baiId);
+    if (soEl) soEl.textContent = Math.max(0, parseInt(soEl.textContent || 0) - 1);
+  }
+}
+
+// Xem chi tiết bài viết (modal)
+async function xemChiTietBai(baiId) {
+  const bai = await layChiTietBaiAPI(baiId);
+  if (!bai) return hienToast('Không thể tải chi tiết', 'loi');
+  
+  const dm = danhMucBai[bai.category] || { nhan:bai.category, nen:'#f3f4f6', mau:'#6b7280' };
+  const tac = bai.authorId?.email || 'Ẩn danh';
+  
+  document.getElementById('tieuDeChiTietBai').textContent = bai.title;
+  document.getElementById('noiDungChiTietBai').innerHTML = `
+    <div style="margin-bottom:16px">
+      <span class="tag" style="background:${dm.nen};color:${dm.mau}">${dm.nhan}</span>
+      <span style="margin-left:12px;color:var(--gray-600);font-size:14px">
+        👤 ${tac} • 📅 ${new Date(bai.createdAt).toLocaleDateString('vi-VN')}
+      </span>
+    </div>
+    
+    <div style="white-space:pre-wrap;line-height:1.75;color:#374151;margin-bottom:24px">
+      ${bai.content}
+    </div>
+    
+    <div style="display:flex;gap:16px;padding:16px;background:var(--gray-50);border-radius:8px;margin-bottom:24px">
+      <div style="text-align:center">
+        <div style="font-size:20px;font-weight:700;color:var(--primary)">${bai.likeCount || 0}</div>
+        <div style="font-size:12px;color:var(--gray-600)">Likes</div>
+      </div>
+      <div style="text-align:center">
+        <div style="font-size:20px;font-weight:700;color:var(--primary)">${bai.commentCount || 0}</div>
+        <div style="font-size:12px;color:var(--gray-600)">Comments</div>
+      </div>
+      <div style="text-align:center">
+        <div style="font-size:20px;font-weight:700;color:var(--primary)">${formatThoiGian(bai.createdAt)}</div>
+        <div style="font-size:12px;color:var(--gray-600)">Posted</div>
+      </div>
+    </div>
+    
+    <h3 style="font-size:18px;font-weight:600;margin-bottom:16px">💬 Comments (${bai.commentCount || 0})</h3>
+    <div id="dsBinhLuanModal" style="max-height:300px;overflow-y:auto;margin-bottom:16px"></div>
+    
+    <div class="form-binhluan" style="margin-top:16px">
+      <textarea id="inputBLModal" class="input-binhluan" rows="2" placeholder="Write a comment..."
+        onkeydown="if(event.key==='Enter' && !event.shiftKey) { event.preventDefault(); guiBinhLuanModal('${baiId}'); }"></textarea>
+      <button class="btn btn-primary" onclick="guiBinhLuanModal('${baiId}')">Post Comment</button>
+    </div>
+  `;
+  
+  // Load comments
+  if (bai.comments && bai.comments.length > 0) {
+    document.getElementById('dsBinhLuanModal').innerHTML = bai.comments.map(bl => {
+      const chu = bl.userId?.email?.charAt(0).toUpperCase() || 'U';
+      return `
+      <div class="muc-binhluan">
+        <div class="avatar-bl">${chu}</div>
+        <div class="noidung-bl">
+          <div class="ten-bl">${bl.userId?.email || 'Ẩn danh'}</div>
+          <div class="text-bl">${bl.content}</div>
+          <div class="thoigian-bl">${formatThoiGian(bl.createdAt)}</div>
+        </div>
+      </div>`;
+    }).join('');
+  } else {
+    document.getElementById('dsBinhLuanModal').innerHTML = '<p style="text-align:center;color:var(--gray-500)">No comments yet. Be the first!</p>';
+  }
+  
+  document.getElementById('modalChiTietBai').classList.remove('an');
+}
+
+function dongModalChiTietBai() {
+  document.getElementById('modalChiTietBai').classList.add('an');
+}
+
+async function guiBinhLuanModal(baiId) {
+  const input = document.getElementById('inputBLModal');
+  const nd = input?.value.trim();
+  if (!nd) return hienToast('Vui lòng nhập nội dung bình luận', 'loi');
+  
+  input.value = '';
+  input.disabled = true;
+  
+  const kq = await taoBinhLuanAPI(baiId, nd);
+  input.disabled = false;
+  
+  if (kq) {
+    hienToast('Đã thêm bình luận!');
+    xemChiTietBai(baiId); // Reload modal
+  } else {
+    hienToast('Không gửi được bình luận', 'loi');
+  }
+}
+
+// Tải danh sách bình luận (original function)
 async function taiDanhSachBinhLuan(baiId) {
   const container = document.getElementById('dsBL-' + baiId);
   if (!container) return;
@@ -876,20 +1013,53 @@ async function taiYeuCauNhanDuoc() {
   if (!ds?.length) return;
   document.getElementById('danhSachYeuCauNhanDuoc').innerHTML = ds.map(r=>`
     <div style="padding:12px 0;border-bottom:1px solid var(--xam-1)">
-      <div style="font-weight:500;font-size:13px">${r.topic}</div>
+      <div style="font-weight:500;font-size:13px">📚 ${r.topic}</div>
       <div style="font-size:12px;color:var(--xam-5);margin:4px 0">Từ: ${r.studentId?.email||'--'}</div>
-      <div style="font-size:13px;color:var(--xam-7);margin-bottom:10px">${r.message?.substring(0,100)}...</div>
+      <div style="font-size:13px;color:var(--xam-7);margin-bottom:10px;padding:8px;background:var(--xam-1);border-radius:6px">${r.message?.substring(0,150)}${r.message?.length > 150 ? '...' : ''}</div>
+      ${r.responseMessage ? `<div style="font-size:12px;color:var(--primary);margin-bottom:8px;padding:8px;background:#e8f0fe;border-radius:6px">💬 Phản hồi của bạn: ${r.responseMessage}</div>` : ''}
       ${r.status==='Pending' ? `
-        <div style="display:flex;gap:8px">
-          <button class="btn btn-xanh btn-nho" onclick="phanHoiMentor('${r._id}','Accepted')">✅ Chấp nhận</button>
-          <button class="btn btn-do btn-nho" onclick="phanHoiMentor('${r._id}','Rejected')">❌ Từ chối</button>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-xanh btn-nho" onclick="phanHoiMentor('${r._id}','Accepted',true)">✅ Chấp nhận & Trả lời</button>
+          <button class="btn btn-do btn-nho" onclick="phanHoiMentor('${r._id}','Rejected',true)">❌ Từ chối & Lý do</button>
         </div>` : `<span class="nhan-tt ${r.status==='Accepted'?'nhan-xanh':'nhan-do'}">${dichTrangThaiMentor(r.status)}</span>`}
     </div>`).join('');
 }
 
-async function phanHoiMentor(id, tt) {
+async function phanHoiMentor(id, tt, showReplyForm = false) {
+  if (showReplyForm) {
+    // Show reply form
+    const form = document.getElementById('formPhanHoiMentor');
+    const requestId = document.getElementById('mentorRequestId');
+    if (form && requestId) {
+      requestId.value = id;
+      form.classList.remove('an');
+      form.scrollIntoView({ behavior: 'smooth' });
+    }
+    return;
+  }
+  
   const kq = await phanHoiYeuCauMentorAPI(id, tt);
-  if (kq) { hienToast(tt==='Accepted'?'Đã chấp nhận yêu cầu mentor!':'Đã từ chối yêu cầu.'); taiYeuCauNhanDuoc(); }
+  if (kq) { 
+    hienToast(tt==='Accepted'?'Đã chấp nhận yêu cầu mentor! Sinh viên sẽ nhận được thông báo.':'Đã từ chối yêu cầu.'); 
+    taiYeuCauNhanDuoc(); 
+  }
+}
+
+async function guiPhanHoiMentor() {
+  const requestId = document.getElementById('mentorRequestId').value;
+  const status = document.getElementById('mentorResponseStatus').value;
+  const message = document.getElementById('mentorResponseMessage').value.trim();
+  
+  if (!status) return hienToast('Vui lòng chọn trạng thái phản hồi', 'loi');
+  if (!message) return hienToast('Vui lòng nhập lời nhắn cho sinh viên', 'loi');
+  
+  const kq = await phanHoiYeuCauMentorAPI(requestId, status, message);
+  if (kq) {
+    hienToast(status === 'Accepted' ? 'Đã chấp nhận và gửi lời nhắn!' : 'Đã từ chối và gửi lý do.');
+    document.getElementById('formPhanHoiMentor').classList.add('an');
+    document.getElementById('mentorResponseMessage').value = '';
+    taiYeuCauNhanDuoc();
+  }
 }
 
 async function rutHoSo(id) {
@@ -907,7 +1077,7 @@ function anFormSuaHoSo() {
   document.getElementById('hienThiHoSo').classList.remove('an');
 }
 
-async function luuHoSo() {
+async function capNhatHoSo() {
   const dl = {
     fullName: document.getElementById('suaTen').value.trim(),
     studentCode: document.getElementById('suaMSSV').value.trim(),
@@ -949,103 +1119,182 @@ async function taiThongBao() {
 
 // ===== QUẢN TRỊ =====
 async function taiDuLieuAdmin() {
-  taiThongKe();
+  // Load stats để update badges
+  const stats = await layThongKeAPI();
+  if (stats) {
+    document.getElementById('soViecCho').textContent = stats.pendingJobs || 0;
+    document.getElementById('soBaiCho').textContent = stats.pendingPosts || 0;
+    document.getElementById('soBaoCao').textContent = stats.totalReports || 0;
+  }
+  
+  // Load pending jobs by default
   taiTinChoDuyet();
-  taiBaiChoDuyet();
 }
 
 async function taiTinChoDuyet() {
-  const tbody = document.getElementById('bangTinChoduyet');
+  const container = document.getElementById('danhSachViecCho');
+  container.innerHTML = '<div class="dang-tai"><div class="vong-quay"></div> Loading...</div>';
+  
   const ds = await layTinChoDuyetAPI();
-  if (!ds?.length) { tbody.innerHTML='<tr><td colspan="6" class="o-trong">✅ Không có tin tuyển dụng nào chờ duyệt</td></tr>'; return; }
-  tbody.innerHTML = ds.map(j=>`
-    <tr>
-      <td><strong>${j.title}</strong><br><small style="color:var(--xam-5)">${j.position}</small></td>
-      <td style="font-size:13px">${j.creatorId?.email||'--'}</td>
-      <td><span class="tag tag-xanh">${nhanLoaiViec(j.jobType)}</span></td>
-      <td>📍 ${j.location}</td>
-      <td style="font-size:13px">${new Date(j.deadline).toLocaleDateString('vi-VN')}</td>
-      <td>
-        <div style="display:flex;gap:6px">
-          <button class="btn btn-xanh btn-nho" onclick="duyetViec('${j._id}','Approved')">✅ Duyệt</button>
-          <button class="btn btn-do btn-nho" onclick="tuChoiViec('${j._id}')">❌ Từ chối</button>
+  if (!ds || ds.length === 0) {
+    container.innerHTML = '<div class="rong"><p>✅ No pending job postings</p></div>';
+    return;
+  }
+  
+  container.innerHTML = ds.map(j => `
+    <div class="admin-card">
+      <div class="admin-card-header">
+        <div>
+          <h3 class="admin-card-title">${j.title}</h3>
+          <div class="admin-card-meta">👤 ${j.creatorId?.email || 'Unknown'}</div>
+          <div class="admin-card-meta">📍 ${j.location} • ${nhanLoaiViec(j.jobType)} • Deadline: ${new Date(j.deadline).toLocaleDateString('vi-VN')}</div>
         </div>
-      </td>
-    </tr>`).join('');
+        <span class="badge-pending">Pending</span>
+      </div>
+      <div class="admin-card-content">${j.description ? j.description.substring(0, 200) + '...' : 'No description'}</div>
+      <div class="admin-card-actions">
+        <button class="btn btn-success" onclick="duyetViec('${j._id}','Approved')">✅ Approve</button>
+        <button class="btn btn-danger" onclick="tuChoiViec('${j._id}')">❌ Reject</button>
+      </div>
+    </div>
+  `).join('');
 }
 
 async function taiBaiChoDuyet() {
-  const tbody = document.getElementById('bangBaiChoduyet');
+  const container = document.getElementById('danhSachBaiCho');
+  container.innerHTML = '<div class="dang-tai"><div class="vong-quay"></div> Loading...</div>';
+  
   const ds = await layBaiChoDuyetAPI();
-  if (!ds?.length) { tbody.innerHTML='<tr><td colspan="5" class="o-trong">✅ Không có bài viết nào chờ duyệt</td></tr>'; return; }
-  tbody.innerHTML = ds.map(p=>`
-    <tr>
-      <td><strong>${p.title}</strong></td>
-      <td style="font-size:13px">${p.authorId?.email||'--'}</td>
-      <td>${danhMucBai[p.category]?.nhan||p.category}</td>
-      <td style="font-size:13px">${new Date(p.createdAt).toLocaleDateString('vi-VN')}</td>
-      <td>
-        <div style="display:flex;gap:6px">
-          <button class="btn btn-xanh btn-nho" onclick="duyetBai('${p._id}','Approved')">✅ Duyệt</button>
-          <button class="btn btn-do btn-nho" onclick="duyetBai('${p._id}','Hidden')">🚫 Ẩn</button>
+  if (!ds || ds.length === 0) {
+    container.innerHTML = '<div class="rong"><p>✅ No pending posts</p></div>';
+    return;
+  }
+  
+  container.innerHTML = ds.map(p => `
+    <div class="admin-card">
+      <div class="admin-card-header">
+        <div>
+          <h3 class="admin-card-title">${p.title}</h3>
+          <div class="admin-card-meta">👤 ${p.authorId?.email || 'Unknown'}</div>
+          <div class="admin-card-meta">📁 ${danhMucBai[p.category]?.nhan || p.category} • ${new Date(p.createdAt).toLocaleDateString('vi-VN')}</div>
         </div>
-      </td>
-    </tr>`).join('');
+        <span class="badge-pending">Pending</span>
+      </div>
+      <div class="admin-card-content">${p.content ? p.content.substring(0, 200) + '...' : 'No content'}</div>
+      <div class="admin-card-actions">
+        <button class="btn btn-success" onclick="duyetBai('${p._id}','Approved')">✅ Approve</button>
+        <button class="btn btn-danger" onclick="duyetBai('${p._id}','Hidden')">🚫 Hide</button>
+      </div>
+    </div>
+  `).join('');
 }
 
 async function taiBaoCaoViPham() {
-  const tbody = document.getElementById('bangBaoCao');
+  const container = document.getElementById('danhSachBaoCao');
+  container.innerHTML = '<div class="dang-tai"><div class="vong-quay"></div> Loading...</div>';
+  
   const ds = await layBaoCaoAPI();
-  if (!ds?.length) { tbody.innerHTML='<tr><td colspan="5" class="o-trong">✅ Không có báo cáo vi phạm nào</td></tr>'; return; }
-  tbody.innerHTML = ds.map(r=>`
-    <tr>
-      <td style="font-size:13px">${r.reporterId?.email||'--'}</td>
-      <td><span class="nhan-tt nhan-xam">${r.targetType}</span></td>
-      <td style="font-size:13px">${r.reason}</td>
-      <td><span class="nhan-tt nhan-vang">Chờ xử lý</span></td>
-      <td><button class="btn btn-xanh btn-nho" onclick="xulyBaoCao('${r._id}')">✅ Giải quyết</button></td>
-    </tr>`).join('');
+  if (!ds || ds.length === 0) {
+    container.innerHTML = '<div class="rong"><p>✅ No reports</p></div>';
+    return;
+  }
+  
+  container.innerHTML = ds.map(r => `
+    <div class="admin-card">
+      <div class="admin-card-header">
+        <div>
+          <h3 class="admin-card-title">🚩 ${r.targetType} Report</h3>
+          <div class="admin-card-meta">Reported by: ${r.reporterId?.email || 'Unknown'}</div>
+          <div class="admin-card-meta">Date: ${new Date(r.createdAt).toLocaleDateString('vi-VN')}</div>
+        </div>
+        <span class="badge-pending">Pending</span>
+      </div>
+      <div class="admin-card-content"><strong>Reason:</strong> ${r.reason}</div>
+      <div class="admin-card-actions">
+        <button class="btn btn-success" onclick="xulyBaoCao('${r._id}')">✅ Resolve</button>
+      </div>
+    </div>
+  `).join('');
 }
 
 async function taiNguoiDungAdmin() {
-  const tbody = document.getElementById('bangNguoiDung');
+  const container = document.getElementById('danhSachNguoiDung');
+  container.innerHTML = '<div class="dang-tai"><div class="vong-quay"></div> Loading...</div>';
+  
   const ds = await layNguoiDungAdminAPI();
-  if (!ds?.length) { tbody.innerHTML='<tr><td colspan="5" class="o-trong">Không có người dùng</td></tr>'; return; }
-  tbody.innerHTML = ds.map(u=>`
-    <tr>
-      <td>${u.email}</td>
-      <td>${(u.roles||[]).map(r=>r.roleName||r).join(', ')||'--'}</td>
-      <td><span class="nhan-tt ${u.accountStatus==='Active'?'nhan-xanh':'nhan-do'}">${u.accountStatus==='Active'?'Đang hoạt động':'Đã khóa'}</span></td>
-      <td style="font-size:13px">${new Date(u.createdAt).toLocaleDateString('vi-VN')}</td>
-      <td>
-        ${u.accountStatus==='Active'
-          ? `<button class="btn btn-do btn-nho" onclick="khoaTaiKhoan('${u._id}','Locked')">🔒 Khóa</button>`
-          : `<button class="btn btn-xanh btn-nho" onclick="khoaTaiKhoan('${u._id}','Active')">🔓 Mở khóa</button>`}
-      </td>
-    </tr>`).join('');
+  if (!ds || ds.length === 0) {
+    container.innerHTML = '<div class="rong"><p>No users found</p></div>';
+    return;
+  }
+  
+  container.innerHTML = ds.map(u => `
+    <div class="admin-card">
+      <div class="admin-card-header">
+        <div>
+          <h3 class="admin-card-title">${u.email}</h3>
+          <div class="admin-card-meta">Roles: ${(u.roles || []).map(r => r.roleName || r).join(', ') || 'None'}</div>
+          <div class="admin-card-meta">Joined: ${new Date(u.createdAt).toLocaleDateString('vi-VN')}</div>
+        </div>
+        <span class="badge-${u.accountStatus === 'Active' ? 'approved' : 'locked'}">${u.accountStatus === 'Active' ? 'Active' : 'Locked'}</span>
+      </div>
+      <div class="admin-card-actions">
+        ${u.accountStatus === 'Active'
+          ? `<button class="btn btn-danger" onclick="khoaTaiKhoan('${u._id}','Locked')">🔒 Lock Account</button>`
+          : `<button class="btn btn-success" onclick="khoaTaiKhoan('${u._id}','Active')">🔓 Unlock Account</button>`}
+      </div>
+    </div>
+  `).join('');
 }
 
 async function taiNhatKy() {
-  const tbody = document.getElementById('bangNhatKy');
+  const container = document.getElementById('danhSachNhatKy');
+  container.innerHTML = '<div class="dang-tai"><div class="vong-quay"></div> Loading...</div>';
+  
   const ds = await layNhatKyAPI();
-  if (!ds?.length) { tbody.innerHTML='<tr><td colspan="4" class="o-trong">Chưa có nhật ký</td></tr>'; return; }
-  tbody.innerHTML = ds.map(l=>`
-    <tr>
-      <td style="font-size:13px">${l.actorId?.email||'--'}</td>
-      <td><span class="nhan-tt nhan-xam">${dich_hanh_dong(l.action)}</span></td>
-      <td style="font-size:13px">${l.targetTable}</td>
-      <td style="font-size:13px">${new Date(l.createdAt).toLocaleString('vi-VN')}</td>
-    </tr>`).join('');
+  if (!ds || ds.length === 0) {
+    container.innerHTML = '<div class="rong"><p>No audit logs</p></div>';
+    return;
+  }
+  
+  container.innerHTML = ds.map(l => `
+    <div class="admin-card" style="padding:16px">
+      <div style="display:flex;justify-content:space-between;align-items:start">
+        <div>
+          <div class="admin-card-meta">${l.actorId?.email || 'System'} • ${dich_hanh_dong(l.action)}</div>
+          <div class="admin-card-meta" style="color:var(--gray-500)">${l.targetTable} • ${new Date(l.createdAt).toLocaleString('vi-VN')}</div>
+        </div>
+      </div>
+    </div>
+  `).join('');
 }
 
-function chuyenTabAdmin(tab, btn) {
-  document.querySelectorAll('.tab-noi-dung').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('qt-'+tab).classList.add('active');
-  btn.classList.add('active');
-  if (tab==='bao-cao') taiBaoCaoViPham();
-  if (tab==='nguoi-dung') taiNguoiDungAdmin();
-  if (tab==='nhat-ky') taiNhatKy();
+function chuyenTabAdmin(tab) {
+  // Ẩn tất cả tabs
+  document.querySelectorAll('.tab-noidung').forEach(t => t.classList.add('an'));
+  document.querySelectorAll('.tab-admin').forEach(b => b.classList.remove('active'));
+  
+  // Hiện tab được chọn
+  if (tab === 'viec') {
+    document.getElementById('bangViecCho').classList.remove('an');
+    document.getElementById('tabViecCho').classList.add('active');
+    taiTinChoDuyet();
+  } else if (tab === 'bai') {
+    document.getElementById('bangBaiCho').classList.remove('an');
+    document.getElementById('tabBaiCho').classList.add('active');
+    taiBaiChoDuyet();
+  } else if (tab === 'baocao') {
+    document.getElementById('bangBaoCao').classList.remove('an');
+    document.getElementById('tabBaoCao').classList.add('active');
+    taiBaoCaoViPham();
+  } else if (tab === 'nguoidung') {
+    document.getElementById('bangNguoiDung').classList.remove('an');
+    document.getElementById('tabNguoiDung').classList.add('active');
+    taiNguoiDungAdmin();
+  } else if (tab === 'nhatky') {
+    document.getElementById('bangNhatKy').classList.remove('an');
+    document.getElementById('tabNhatKy').classList.add('active');
+    taiNhatKy();
+  }
 }
 
 async function duyetViec(id, tt) {
@@ -1120,6 +1369,11 @@ window.batTatFormBai = batTatFormBai;
 window.batTatDangKyMentor = batTatDangKyMentor;
 window.batTatThongBao = batTatThongBao;
 window.xemChiTietViec = xemChiTietViec;
+window.xemChiTietBai = xemChiTietBai;
+window.dongModalChiTietBai = dongModalChiTietBai;
+window.guiBinhLuanModal = guiBinhLuanModal;
+window.xoaBinhLuan = xoaBinhLuan;
+window.guiPhanHoiMentor = guiPhanHoiMentor;
 window.moFormYeuCauMentor = moFormYeuCauMentor;
 window.guiYeuCauMentor = guiYeuCauMentor;
 window.anFormMentor = anFormMentor;
@@ -1128,7 +1382,7 @@ window.taoBaiViet = taoBaiViet;
 window.thichBai = thichBai;
 window.hienFormSuaHoSo = hienFormSuaHoSo;
 window.anFormSuaHoSo = anFormSuaHoSo;
-window.luuHoSo = luuHoSo;
+window.capNhatHoSo = capNhatHoSo;
 window.debounceTimKiemViec = debounceTimKiemViec;
 window.debounceTimKiemBai = debounceTimKiemBai;
 window.debounceTimKiemMentor = debounceTimKiemMentor;

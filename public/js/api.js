@@ -47,6 +47,7 @@ const layDanhSachBaiAPI = (params = {}) => goiAPI(`/posts?${new URLSearchParams(
 const layChiTietBaiAPI = (id) => goiAPI(`/posts/${id}`);
 const capNhatBaiVietAPI = (id, dl) => goiAPI(`/posts/${id}`, 'PUT', dl);
 const taoBinhLuanAPI = (postId, nd) => goiAPI(`/posts/${postId}/comments`, 'POST', { content: nd });
+const xoaBinhLuanAPI = (postId, commentId) => goiAPI(`/posts/${postId}/comments/${commentId}`, 'DELETE', {});
 const thichBaiAPI = (postId) => goiAPI(`/posts/${postId}/like`, 'POST', {});
 
 // ===== MENTOR =====
@@ -104,6 +105,7 @@ window.layDanhSachBaiAPI = layDanhSachBaiAPI;
 window.layChiTietBaiAPI = layChiTietBaiAPI;
 window.capNhatBaiVietAPI = capNhatBaiVietAPI;
 window.taoBinhLuanAPI = taoBinhLuanAPI;
+window.xoaBinhLuanAPI = xoaBinhLuanAPI;
 window.thichBaiAPI = thichBaiAPI;
 window.layDanhSachMentorAPI = layDanhSachMentorAPI;
 window.guiYeuCauMentorAPI = guiYeuCauMentorAPI;

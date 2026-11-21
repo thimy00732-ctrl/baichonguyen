@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AlumniNet – Kết Nối Cơ Hội Nghề Nghiệp</title>
-  <link rel="stylesheet" href="/css/handshake-style.css">
+  <link rel="stylesheet" href="/css/handshake-style.css?v=20261122002">
 </head>
 <body>
 
@@ -576,6 +576,14 @@
                   <p style="color:var(--gray-500);text-align:center;padding:16px">No requests yet</p>
                 </div>
               </div>
+              
+              <!-- Mentor Requests Received (for Alumni only) -->
+              <div class="card an" id="blockYeuCauNhanDuoc" style="cursor:default">
+                <h3 style="font-size:16px;font-weight:600;margin-bottom:16px">📬 Requests Received</h3>
+                <div id="danhSachYeuCauNhanDuoc">
+                  <p style="color:var(--gray-500);text-align:center;padding:16px">No requests yet</p>
+                </div>
+              </div>
             </div>
 
             <!-- Main Content -->
@@ -669,18 +677,91 @@
                   <button class="btn btn-ghost" onclick="hienFormSuaHoSo()">Cancel</button>
                 </div>
               </div>
+              
+              <!-- Mentor Response Form -->
+              <div class="card an" id="formPhanHoiMentor" style="cursor:default;margin-top:24px">
+                <h3 style="font-size:20px;font-weight:600;margin-bottom:24px">💬 Respond to Mentorship Request</h3>
+                <input type="hidden" id="mentorRequestId">
+                <div class="form-group">
+                  <label>Your Decision *</label>
+                  <select id="mentorResponseStatus">
+                    <option value="">-- Select --</option>
+                    <option value="Accepted">✅ Accept - I'm happy to help!</option>
+                    <option value="Rejected">❌ Decline - Not available right now</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Your Message to Student *</label>
+                  <textarea id="mentorResponseMessage" rows="4" placeholder="If accepting: Share your contact info, available times, or advice&#10;If declining: Briefly explain why or suggest alternatives"></textarea>
+                  <small style="color:var(--gray-600);display:block;margin-top:8px">
+                    💡 Tip: Be specific about how you can help or when you're available
+                  </small>
+                </div>
+                <div style="display:flex;gap:12px;margin-top:8px">
+                  <button class="btn btn-primary" onclick="guiPhanHoiMentor()">Send Response</button>
+                  <button class="btn btn-ghost" onclick="document.getElementById('formPhanHoiMentor').classList.add('an')">Cancel</button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </section>
     </div>
 
-    <!-- Admin page placeholder -->
+    <!-- Admin page -->
     <div id="quantri" class="trang">
       <section class="section">
         <div class="container">
-          <h1 style="font-size:36px;font-weight:700;margin-bottom:32px">Admin Dashboard</h1>
-          <p style="color:var(--gray-600)">Admin features will be implemented here</p>
+          <h1 style="font-size:36px;font-weight:700;margin-bottom:32px">⚙️ Admin Dashboard</h1>
+          
+          <!-- Admin Tabs Navigation -->
+          <div style="display:flex;gap:16px;margin-bottom:32px;border-bottom:2px solid var(--gray-200);padding-bottom:0">
+            <button id="tabViecCho" class="tab-admin active" onclick="chuyenTabAdmin('viec')">
+              📋 Pending Jobs (<span id="soViecCho">0</span>)
+            </button>
+            <button id="tabBaiCho" class="tab-admin" onclick="chuyenTabAdmin('bai')">
+              📝 Pending Posts (<span id="soBaiCho">0</span>)
+            </button>
+            <button id="tabBaoCao" class="tab-admin" onclick="chuyenTabAdmin('baocao')">
+              🚩 Reports (<span id="soBaoCao">0</span>)
+            </button>
+            <button id="tabNguoiDung" class="tab-admin" onclick="chuyenTabAdmin('nguoidung')">
+              👥 Users
+            </button>
+            <button id="tabNhatKy" class="tab-admin" onclick="chuyenTabAdmin('nhatky')">
+              📊 Audit Logs
+            </button>
+          </div>
+
+          <!-- Pending Jobs Tab -->
+          <div id="bangViecCho" class="tab-noidung">
+            <div id="danhSachViecCho"></div>
+          </div>
+
+          <!-- Pending Posts Tab -->
+          <div id="bangBaiCho" class="tab-noidung an">
+            <div id="danhSachBaiCho"></div>
+          </div>
+
+          <!-- Reports Tab -->
+          <div id="bangBaoCao" class="tab-noidung an">
+            <div id="danhSachBaoCao"></div>
+          </div>
+
+          <!-- Users Tab -->
+          <div id="bangNguoiDung" class="tab-noidung an">
+            <div style="margin-bottom:16px">
+              <input type="text" id="timKiemNguoiDung" placeholder="🔍 Search users by email..." 
+                     style="width:100%;max-width:500px;padding:12px;border:1px solid var(--gray-300);border-radius:8px">
+            </div>
+            <div id="danhSachNguoiDung"></div>
+          </div>
+
+          <!-- Audit Logs Tab -->
+          <div id="bangNhatKy" class="tab-noidung an">
+            <div id="danhSachNhatKy"></div>
+          </div>
+
         </div>
       </section>
     </div>
@@ -702,6 +783,23 @@
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="dongModalChiTiet()">Close</button>
       <button class="btn btn-primary" id="btnUngTuyenChiTiet">Apply now</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Post Details -->
+<div id="modalChiTietBai" class="modal an">
+  <div class="modal-overlay" onclick="dongModalChiTietBai()"></div>
+  <div class="modal-content" style="max-width:800px">
+    <div class="modal-header">
+      <h2 id="tieuDeChiTietBai">Post Title</h2>
+      <button class="modal-close" onclick="dongModalChiTietBai()">✕</button>
+    </div>
+    <div class="modal-body" style="max-height:600px;overflow-y:auto">
+      <div id="noiDungChiTietBai"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" onclick="dongModalChiTietBai()">Close</button>
     </div>
   </div>
 </div>
@@ -752,9 +850,9 @@
 </div>
 
 <!-- Scripts -->
-<script src="/js/api.js?v=20261121999"></script>
-<script src="/js/app.js?v=20261121999"></script>
-<script src="/js/handshake-render.js?v=20261121999"></script>
+<script src="/js/api.js?v=20261122002"></script>
+<script src="/js/app.js?v=20261122002"></script>
+<script src="/js/handshake-render.js?v=20261122002"></script>
 
 </body>
 </html>

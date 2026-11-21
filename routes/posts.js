@@ -159,6 +159,39 @@ router.post('/:postId/comments', authenticate, async (req, res) => {
   }
 });
 
+// Xóa bình luận (Author hoặc Admin)
+router.delete('/:postId/comments/:commentId', authenticate, async (req, res) => {
+  try {
+    const comment = await Comment.findById(req.params.commentId);
+
+    if (!comment) {
+      return res.status(404).json({ message: 'Comment not found' });
+    }
+
+    // Kiểm tra quyền: chỉ author của comment hoặc admin mới được xóa
+    if (comment.userId.toString() !== req.user._id.toString() &&
+        !req.user.roles.some(r => r.roleName === 'Admin')) {
+      return res.status(403).json({ message: 'Access denied' });
+    }
+
+    await Comment.deleteOne({ _id: comment._id });
+
+    // Cập nhật số lượng bình luận
+    const post = await Post.findById(req.params.postId);
+    if (post && post.commentCount > 0) {
+      post.commentCount -= 1;
+      await post.save();
+    }
+
+    res.json({
+      message: 'Comment deleted',
+      commentId: req.params.commentId
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Error deleting comment', error: error.message });
+  }
+});
+
 // Like bài viết
 router.post('/:postId/like', authenticate, async (req, res) => {
   try {
