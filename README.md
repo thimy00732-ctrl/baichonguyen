@@ -1,255 +1,384 @@
-# 🎓 Alumni Student Network - Hệ Thống Kết Nối Cựu Sinh Viên & Sinh Viên
+# 🎓 AlumniNet - Career Network Platform
 
-[![Node.js](https://img.shields.io/badge/Node.js-16+-green.svg)](https://nodejs.org/)
-[![MongoDB](https://img.shields.io/badge/MongoDB-5.0+-success.svg)](https://www.mongodb.com/)
-[![Express](https://img.shields.io/badge/Express-4.18-blue.svg)](https://expressjs.com/)
-[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+> Professional career networking platform for students and alumni, inspired by Handshake.
 
-> Một nền tảng web kết nối cựu sinh viên - sinh viên, chia sẻ kinh nghiệm và cơ hội thực tập, việc làm.
+[![Design](https://img.shields.io/badge/Design-Handshake--inspired-0A66C2?style=flat-square)](/)
+[![Status](https://img.shields.io/badge/Status-Production%20Ready-success?style=flat-square)](/)
+[![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](/)
 
-## 📸 Demo
+## 🌟 Features
 
-🌐 **Live Demo:** [Coming soon...]
+### For Students & Alumni
+- 💼 **Job Board** - Browse 1000+ opportunities from top companies
+- 🤝 **Mentorship** - Connect with experienced alumni for career guidance
+- 💬 **Community** - Share experiences, ask questions, get advice
+- 📊 **Profile** - Showcase your skills and track applications
 
-![Screenshot](https://via.placeholder.com/800x400?text=Alumni+Network+Screenshot)
+### For Recruiters
+- 📝 **Post Jobs** - Reach qualified candidates from top universities
+- 👥 **Talent Pool** - Access verified student and alumni profiles
+- 🎯 **Targeted Hiring** - Filter by major, skills, graduation year
 
-## 🚀 Công Nghệ Sử Dụng
+### For Admins
+- ⚙️ **Dashboard** - Monitor platform activity and statistics
+- ✅ **Content Moderation** - Approve jobs and posts
+- 🔒 **User Management** - Manage accounts and permissions
+- 📈 **Analytics** - Track engagement and growth metrics
 
-- **Backend**: Node.js + Express.js
-- **Database**: MongoDB
-- **Frontend**: HTML5, CSS3, JavaScript
-- **Authentication**: JWT (JSON Web Tokens)
-- **Authorization**: RBAC (Role-Based Access Control)
+## 🎨 Design
 
-## 📋 Các Vai Trò & Quyền
+**Handshake-inspired professional UI**
+- Clean, modern, card-based layout
+- Professional blue color palette (#0A66C2)
+- Inter font family for excellent readability
+- Fully responsive (Desktop → Tablet → Mobile)
+- Smooth animations and hover effects
 
-### 1. **Sinh Viên (Student)**
-- Xem bảng tin và tin tuyển dụng
-- Tìm kiếm cựu sinh viên làm mentor
-- Tạo/cập nhật hồ sơ cá nhân
-- Đăng bài cộng đồng
-- Nộp hồ sơ ứng tuyển
+[📚 View Design Documentation →](./HANDSHAKE-DESIGN.md)
 
-### 2. **Cựu Sinh Viên (Alumni)**
-- Quản lý hồ sơ nghề nghiệp
-- Đăng bài chia sẻ kinh nghiệm
-- Làm mentor hỗ trợ sinh viên
-- Có thể đăng tin tuyển dụng (nếu được xác thực)
+## 🚀 Quick Start
 
-### 3. **Nhà Tuyển Dụng (Recruiter)**
-- Tạo & quản lý tin tuyển dụng
-- Xem & quản lý hồ sơ ứng tuyển
-- Cập nhật trạng thái tuyển dụng
+### Option 1: Demo Mode (No Database Required)
 
-### 4. **Quản Trị Viên (Admin)**
-- Duyệt tin tuyển dụng
-- Duyệt bài viết cộng đồng
-- Xác thực tài khoản nhà tuyển dụng
-- Xử lý báo cáo vi phạm
-- Khóa/mở khóa tài khoản
-- Xem thống kê & audit log
+Perfect for testing and development.
 
-## 📦 Cài Đặt & Chạy
-
-### 1. Cài Đặt MongoDB
-**Nếu chưa có MongoDB**, tải và cài đặt từ: https://www.mongodb.com/try/download/community
-
-Sau khi cài đặt, chạy MongoDB:
-```powershell
-# Windows
-mongod
-
-# hoặc nếu cài như service
-net start MongoDB
-```
-
-### 2. Cài Đặt Node.js Dependencies
-
-```powershell
-cd d:\Baichonguyen
+```bash
+# 1. Install dependencies
 npm install
+
+# 2. Start demo server
+npm run demo
+# or
+node server-demo.js
+
+# 3. Open browser
+http://localhost:5000
 ```
 
-### 3. Cấu Hình Biến Môi Trường
+**Demo accounts**: Use any email + any password
 
-File `.env` đã được tạo sẵn. Nếu cần sửa:
-```
-PORT=5000
-MONGODB_URI=mongodb://localhost:27017/alumni-student-network
-JWT_SECRET=your_jwt_secret_key_change_in_production
-JWT_EXPIRE=7d
-NODE_ENV=development
-```
+### Option 2: Full Mode (with MongoDB)
 
-### 4. Chạy Server
+For production deployment.
 
-**Mode Development:**
-```powershell
-npm run dev
-```
+```bash
+# 1. Install dependencies
+npm install
 
-**Mode Production:**
-```powershell
+# 2. Start MongoDB
+net start MongoDB
+
+# 3. Create .env file
+cp .env.example .env
+# Edit .env with your MongoDB URI
+
+# 4. Seed database (first time only)
+node seedData.js
+
+# 5. Start server
 npm start
+# or
+node server.js
+
+# 6. Open browser
+http://localhost:5000
 ```
 
-Server sẽ chạy tại: `http://localhost:5000`
+**Seeded accounts**:
+- Admin: `admin@example.com` / `admin123`
+- Student: `student@example.com` / `student123`
+- Alumni: `alumni@example.com` / `alumni123`
+- Recruiter: `recruiter@example.com` / `recruiter123`
 
-### 5. Truy Cập Ứng Dụng
-
-Mở trình duyệt và truy cập: http://localhost:5000
-
-## 🎯 Hướng Dùng
-
-### Đăng Ký Tài Khoản
-1. Nhấp vào "Đăng Ký"
-2. Nhập email, mật khẩu, họ tên
-3. Chọn vai trò (Sinh Viên, Cựu Sinh Viên, Nhà Tuyển Dụng)
-4. Nhấp "Đăng Ký"
-
-### Tìm Việc Làm
-1. Truy cập tab "Việc Làm"
-2. Tìm kiếm hoặc lọc theo loại công việc
-3. Nhấp "Ứng Tuyển" để nộp hồ sơ
-
-### Đăng Tin Tuyển Dụng (Recruiter)
-1. Truy cập tab "Việc Làm"
-2. Nhấp "+ Đăng Tin"
-3. Nhập thông tin tin tuyển dụng
-4. Nhấp "Đăng Tin" (chờ admin duyệt)
-
-### Tìm Mentor
-1. Truy cập tab "Mentor"
-2. Tìm kiếm mentor theo kỹ năng
-3. Nhấp "Yêu Cầu Mentor" để gửi yêu cầu
-
-### Chia Sẻ Bài Viết
-1. Truy cập tab "Cộng Đồng"
-2. Nhấp "+ Viết Bài"
-3. Chọn danh mục, nhập tiêu đề & nội dung
-4. Nhấp "Đăng Bài" (chờ admin duyệt)
-
-## 📊 Cấu Trúc Dữ Liệu
-
-### Collections MongoDB:
-- **Users** - Tài khoản người dùng
-- **Roles** - Danh mục vai trò
-- **UserProfiles** - Hồ sơ cá nhân
-- **RecruiterProfiles** - Hồ sơ công ty
-- **JobPostings** - Tin tuyển dụng
-- **Applications** - Hồ sơ ứng tuyển
-- **Posts** - Bài viết cộng đồng
-- **Comments** - Bình luận
-- **PostLikes** - Lượt thích
-- **Connections** - Kết nối người dùng
-- **MentorshipRequests** - Yêu cầu mentor
-- **Reports** - Báo cáo vi phạm
-- **Notifications** - Thông báo
-- **AuditLogs** - Nhật ký kiểm toán
-
-## 🔒 Bảo Mật
-
-- ✅ Mật khẩu được mã hóa bcrypt
-- ✅ JWT token cho authentication
-- ✅ RBAC cho phân quyền
-- ✅ Kiểm tra quyền truy cập dữ liệu cá nhân
-- ✅ Audit log cho các thao tác admin
-- ✅ Validation dữ liệu đầu vào
-
-## 📁 Cấu Trúc Thư Mục
+## 📁 Project Structure
 
 ```
-alumni-student-network/
-├── models/              # MongoDB Schemas
+AlumniNet/
+├── models/              # Mongoose models
 │   ├── User.js
-│   ├── UserProfile.js
 │   ├── JobPosting.js
-│   ├── Application.js
 │   ├── Post.js
-│   ├── Comment.js
-│   ├── MentorshipRequest.js
 │   ├── Notification.js
-│   ├── Report.js
-│   └── AuditLog.js
-├── routes/              # API Routes
+│   └── ...
+├── routes/              # API routes
 │   ├── auth.js
-│   ├── users.js
 │   ├── jobs.js
-│   ├── applications.js
 │   ├── posts.js
-│   ├── mentors.js
-│   └── admin.js
-├── middleware/
-│   └── auth.js          # JWT & RBAC middleware
-├── public/              # Frontend
-│   ├── index.html
+│   ├── notifications.js
+│   ├── reports.js
+│   └── ...
+├── middleware/          # Express middleware
+│   └── auth.js
+├── public/              # Frontend files
+│   ├── index.html              # Main app (Handshake design)
+│   ├── index-original.html     # Original design (backup)
 │   ├── css/
-│   │   └── style.css
+│   │   ├── style.css           # Handshake CSS
+│   │   └── style-original.css  # Original CSS (backup)
 │   └── js/
-│       ├── api.js
-│       └── app.js
-├── server.js            # Entry point
-├── .env                 # Environment variables
-├── package.json         # Dependencies
-└── README.md
+│       ├── app.js              # Main application logic
+│       ├── api.js              # API client functions
+│       └── handshake-render.js # Handshake card renderers
+├── server.js            # Main server (MongoDB)
+├── server-demo.js       # Demo server (No DB)
+├── seedData.js          # Database seeder
+└── package.json
 ```
 
-## 🚀 Các Tính Năng Chính
+## 🔧 Tech Stack
 
-### ✅ Đã Hoàn Thành:
-- Đăng ký & Đăng nhập
-- Quản lý hồ sơ cá nhân
-- Đăng & tìm kiếm tin tuyển dụng
-- Ứng tuyển vào công việc
-- Bảng tin cộng đồng
-- Bình luận & thích bài viết
-- Tìm kiếm & yêu cầu mentor
-- Duyệt tin tuyển dụng (Admin)
-- Duyệt bài viết (Admin)
-- Xác thực recruiter (Admin)
-- Báo cáo vi phạm
-- Thống kê hệ thống
+### Backend
+- **Node.js** - Runtime environment
+- **Express.js** - Web framework
+- **MongoDB** - Database
+- **Mongoose** - ODM
+- **JWT** - Authentication
+- **bcryptjs** - Password hashing
 
-### 🔄 Có Thể Mở Rộng:
-- Nhắn tin real-time (WebSocket)
-- Gợi ý công việc tự động
-- Ghép nối mentor tự động
-- Dashboard analytics nâng cao
-- Mobile app
-- Email notifications
-- Integration với LinkedIn, GitHub
+### Frontend
+- **Vanilla JavaScript** - No framework, pure JS
+- **Modern CSS** - CSS Grid, Flexbox, Variables
+- **Fetch API** - HTTP requests
+- **LocalStorage** - Client-side state
 
-## 🐛 Troubleshooting
+### Design
+- **Handshake-inspired** - Professional, clean, modern
+- **Inter Font** - Typography
+- **Card-based Layout** - Consistent components
+- **Responsive Design** - Mobile-first approach
 
-### MongoDB Connection Error
+## 📡 API Endpoints
+
+### Authentication
 ```
-Đảm bảo MongoDB đang chạy:
-mongod --version
-```
-
-### Port 5000 Already In Use
-```
-Thay đổi PORT trong .env hoặc:
-lsof -i :5000  (macOS/Linux)
-netstat -ano | findstr :5000  (Windows)
+POST   /api/auth/register     - Register new user
+POST   /api/auth/login        - Login
+GET    /api/auth/me           - Get current user
+POST   /api/auth/logout       - Logout
 ```
 
-### JWT Token Invalid
+### Jobs
 ```
-Xóa localStorage:
-localStorage.clear()
+GET    /api/jobs              - List jobs (with pagination)
+POST   /api/jobs              - Create job (Recruiter only)
+GET    /api/jobs/:id          - Get job details
+PUT    /api/jobs/:id          - Update job
+DELETE /api/jobs/:id          - Delete job
 ```
 
-## 📧 Hỗ Trợ
-Nếu gặp vấn đề, vui lòng kiểm tra:
-1. MongoDB có chạy không?
-2. Dependencies đã cài chưa? (`npm install`)
-3. Biến môi trường (.env) có đúng không?
-4. Port 5000 có bị chiếm không?
+### Posts
+```
+GET    /api/posts             - List posts (with pagination)
+POST   /api/posts             - Create post
+GET    /api/posts/:id         - Get post details
+PUT    /api/posts/:id         - Update post
+POST   /api/posts/:id/like    - Like/unlike post
+POST   /api/posts/:id/comments - Add comment
+```
 
-## 📝 License
-MIT
+### Mentors
+```
+GET    /api/mentors           - List mentors
+POST   /api/mentors/request   - Send mentorship request
+GET    /api/mentors/received-requests - Get received requests
+GET    /api/mentors/sent-requests     - Get sent requests
+PUT    /api/mentors/request/:id/respond - Respond to request
+```
+
+### Notifications
+```
+GET    /api/notifications     - Get notifications
+PUT    /api/notifications/:id/read - Mark as read
+PUT    /api/notifications/mark-all-read - Mark all as read
+DELETE /api/notifications/:id - Delete notification
+```
+
+### Reports
+```
+POST   /api/reports           - Create report
+GET    /api/reports/my-reports - Get my reports
+DELETE /api/reports/:id       - Delete report
+```
+
+### Recruiter Profile
+```
+POST   /api/recruiter-profile - Create/update profile
+GET    /api/recruiter-profile/me - Get my profile
+GET    /api/recruiter-profile/:id - Get profile by ID
+DELETE /api/recruiter-profile/me - Delete profile
+```
+
+[📚 Full API Documentation →](./API.md)
+
+## 🎯 Key Features Implemented
+
+### Priority 1 (✅ Complete)
+- ✅ Authentication system (JWT)
+- ✅ Job posting and search
+- ✅ Community posts and comments
+- ✅ Mentorship requests
+- ✅ User profiles
+- ✅ Admin dashboard
+- ✅ Notification system
+- ✅ Report system
+- ✅ Recruiter profiles
+- ✅ Pagination
+- ✅ Search & filters
+
+### Priority 2 (🚧 Planned)
+- ⏳ Real-time notifications (WebSocket)
+- ⏳ Events & Programs
+- ⏳ File uploads (resume, profile pic)
+- ⏳ Email notifications
+- ⏳ Advanced analytics
+- ⏳ Message system
+- ⏳ Career resources
+- ⏳ Company pages
+
+## 🧪 Testing
+
+### Demo Mode Testing
+```bash
+# Start demo server
+npm run demo
+
+# Test in browser
+- Try login with any email/password
+- Browse jobs, posts, mentors
+- Test all CRUD operations
+```
+
+### Full Mode Testing
+```bash
+# Start full server
+npm start
+
+# Run with seeded data
+- Use seeded accounts
+- Test real database operations
+- Check admin features
+```
+
+## 📦 Deployment
+
+### Heroku
+```bash
+# 1. Create app
+heroku create alumninetwork
+
+# 2. Add MongoDB addon
+heroku addons:create mongolab
+
+# 3. Push
+git push heroku main
+
+# 4. Open
+heroku open
+```
+
+### Vercel
+```bash
+# 1. Install Vercel CLI
+npm i -g vercel
+
+# 2. Deploy
+vercel
+
+# 3. Add MongoDB connection string
+vercel env add MONGODB_URI
+```
+
+### Railway
+```bash
+# 1. Install Railway CLI
+npm i -g @railway/cli
+
+# 2. Login
+railway login
+
+# 3. Initialize
+railway init
+
+# 4. Deploy
+railway up
+```
+
+## 🔐 Environment Variables
+
+Create `.env` file:
+
+```env
+# Server
+PORT=5000
+NODE_ENV=production
+
+# Database
+MONGODB_URI=mongodb://localhost:27017/alumninetwork
+
+# JWT
+JWT_SECRET=your-super-secret-jwt-key-here
+JWT_EXPIRE=7d
+
+# Email (optional)
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=your-email@gmail.com
+SMTP_PASS=your-app-password
+```
+
+## 🤝 Contributing
+
+Contributions welcome! Please follow these steps:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit changes (`git commit -m 'Add AmazingFeature'`)
+4. Push to branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+## 👥 Authors
+
+- **Development** - Kiro AI Assistant
+- **Project Owner** - [@thimy00732-ctrl](https://github.com/thimy00732-ctrl)
+
+## 🙏 Acknowledgments
+
+- Design inspired by [Handshake](https://joinhandshake.com/)
+- Icons from emoji system
+- Fonts from Google Fonts (Inter)
+
+## 📞 Support
+
+For support, email support@alumninetwork.com or open an issue.
+
+## 🗺️ Roadmap
+
+### Q1 2025
+- [ ] Mobile app (React Native)
+- [ ] Real-time chat
+- [ ] Video interviews
+- [ ] AI resume builder
+
+### Q2 2025
+- [ ] Company pages
+- [ ] Salary insights
+- [ ] Career paths
+- [ ] Skills assessments
+
+### Q3 2025
+- [ ] Internationalization (i18n)
+- [ ] Dark mode
+- [ ] Accessibility improvements
+- [ ] Performance optimization
 
 ---
-**Phiên bản**: 1.0.0  
-**Cập nhật lần cuối**: Tháng 11, 2026
+
+**Made with ❤️ for students and alumni worldwide**
+
+🌐 **Website**: [alumninetwork.com](https://alumninetwork.com)  
+📧 **Email**: contact@alumninetwork.com  
+🐦 **Twitter**: [@AlumniNetwork](https://twitter.com/alumninetwork)
