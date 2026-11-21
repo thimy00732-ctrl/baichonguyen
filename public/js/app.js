@@ -634,6 +634,9 @@ async function guiBinhLuan(baiId) {
     hienToast('Không gửi được bình luận', 'loi');
   }
 }
+
+// ===== TẢI DANH SÁCH BÀI VIẾT =====
+async function taiDanhSachBai() {
   const tim = document.getElementById('timKiemBai')?.value.trim() || '';
   const dm = document.getElementById('danhMucBaiLoc')?.value || '';
   const container = document.getElementById('danhSachBai');
@@ -1129,6 +1132,9 @@ window.luuHoSo = luuHoSo;
 window.debounceTimKiemViec = debounceTimKiemViec;
 window.debounceTimKiemBai = debounceTimKiemBai;
 window.debounceTimKiemMentor = debounceTimKiemMentor;
+window.taiDanhSachViec = taiDanhSachViec;
+window.taiDanhSachBai = taiDanhSachBai;
+window.taiDanhSachMentor = taiDanhSachMentor;
 window.xoaTimKiemViec = xoaTimKiemViec;
 window.xoaTimKiemBai = xoaTimKiemBai;
 window.xoaTimKiemMentor = xoaTimKiemMentor;
