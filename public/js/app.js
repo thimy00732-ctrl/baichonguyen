@@ -142,7 +142,9 @@ async function dangNhap() {
   const email = document.getElementById('emailDangNhap').value.trim();
   const matKhau = document.getElementById('matKhauDangNhap').value;
   if (!email || !matKhau) return hienToast('Vui lòng nhập đầy đủ thông tin', 'loi');
+  console.log('Đang đăng nhập với:', email);
   const kq = await dangNhapAPI(email, matKhau);
+  console.log('Kết quả đăng nhập:', kq);
   if (kq?.token) {
     localStorage.setItem('token', kq.token);
     hienToast('Đăng nhập thành công!');

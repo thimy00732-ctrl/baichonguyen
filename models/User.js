@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema({
   accountStatus: {
     type: String,
     enum: ['Active', 'Locked', 'Unverified'],
-    default: 'Unverified'
+    default: 'Active'
   },
   roles: [{
     type: mongoose.Schema.Types.ObjectId,

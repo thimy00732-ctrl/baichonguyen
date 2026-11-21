@@ -28,16 +28,12 @@ body {
 /* ===== AUTH ===== */
 .auth-wrapper {
   min-height:100vh;
-  background:
-    linear-gradient(135deg, rgba(26,115,232,0.92), rgba(13,71,161,0.95)),
-    url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1400&q=80') center/cover no-repeat;
+  background: #ffffff;
   display:flex; align-items:center; justify-content:center; padding:40px 20px;
 }
 .auth-card { background:var(--trang); border-radius:20px; box-shadow:var(--bong-lon); overflow:hidden; width:100%; max-width:920px; display:grid; grid-template-columns:1fr 1fr; min-height:580px; }
 .auth-trai {
-  background:
-    linear-gradient(160deg, rgba(26,115,232,0.88), rgba(13,71,161,0.95)),
-    url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&q=80') center/cover no-repeat;
+  background: linear-gradient(135deg, #1a73e8, #0d47a1);
   padding:56px 44px; display:flex; flex-direction:column; justify-content:center; color:#fff;
 }
 .auth-brand { display:flex; align-items:center; gap:12px; margin-bottom:40px; }
@@ -615,14 +611,14 @@ table tr:last-child td { border-bottom:none; }
   background: #fdecea;
 }
 
-/* ===== HÌNH N?N CÁC SECTION ===== */
+/* ===== Hï¿½NH N?N Cï¿½C SECTION ===== */
 
-/* Banner tính nang có hình n?n nh? */
+/* Banner tï¿½nh nang cï¿½ hï¿½nh n?n nh? */
 .banner-tinh-nang {
   background-image: radial-gradient(circle at 10% 50%, rgba(26,115,232,0.03) 0%, transparent 60%);
 }
 
-/* Th? th?ng kê trang ch? */
+/* Th? th?ng kï¿½ trang ch? */
 .luoi-thongke::before {
   content: '';
   display: none;
@@ -635,7 +631,7 @@ table tr:last-child td { border-bottom:none; }
   padding: 4px;
 }
 
-/* Trang vi?c làm - header banner */
+/* Trang vi?c lï¿½m - header banner */
 .banner-viec-lam {
   background:
     linear-gradient(135deg, rgba(26,115,232,0.92), rgba(13,71,161,0.9)),
@@ -707,7 +703,7 @@ table tr:last-child td { border-bottom:none; }
 .banner-nd { flex: 1; }
 .banner-nut { flex-shrink: 0; }
 
-/* Nút tr?ng dùng trên banner có n?n màu */
+/* Nï¿½t tr?ng dï¿½ng trï¿½n banner cï¿½ n?n mï¿½u */
 .btn-trang {
   background: white;
   color: var(--xanh);
