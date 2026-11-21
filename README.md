@@ -1,6 +1,17 @@
-# Alumni Student Network - Hệ Thống Kết Nối Cựu Sinh Viên & Sinh Viên
+# 🎓 Alumni Student Network - Hệ Thống Kết Nối Cựu Sinh Viên & Sinh Viên
 
-Một nền tảng web kết nối cựu sinh viên - sinh viên, chia sẻ kinh nghiệm và cơ hội thực tập, việc làm.
+[![Node.js](https://img.shields.io/badge/Node.js-16+-green.svg)](https://nodejs.org/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-5.0+-success.svg)](https://www.mongodb.com/)
+[![Express](https://img.shields.io/badge/Express-4.18-blue.svg)](https://expressjs.com/)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
+> Một nền tảng web kết nối cựu sinh viên - sinh viên, chia sẻ kinh nghiệm và cơ hội thực tập, việc làm.
+
+## 📸 Demo
+
+🌐 **Live Demo:** [Coming soon...]
+
+![Screenshot](https://via.placeholder.com/800x400?text=Alumni+Network+Screenshot)
 
 ## 🚀 Công Nghệ Sử Dụng
 
