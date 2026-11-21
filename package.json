@@ -5,9 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "demo": "node server-demo.js",
     "dev": "nodemon server.js",
-    "seed": "node seedData.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": ["alumni", "student", "networking"],
