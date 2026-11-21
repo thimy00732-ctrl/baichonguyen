@@ -99,13 +99,28 @@ function hienTrangAuth() {
 }
 
 function hienUngDung(duLieu) {
+  console.log('📊 hienUngDung() called với data:', duLieu);
   document.getElementById('trang-auth').classList.remove('active');
   document.getElementById('ungDung').classList.remove('an');
   const ten = duLieu.profile?.fullName || duLieu.user.email.split('@')[0];
   document.getElementById('avatarNhoBienThuc').textContent = ten.charAt(0).toUpperCase();
   document.getElementById('tenNguoiDung').textContent = ten;
   const roles = (duLieu.user.roles || []).map(r => typeof r === 'string' ? r : r.roleName);
-  if (roles.includes('Admin')) document.getElementById('nav-quantri-li').classList.remove('an');
+  console.log('🔐 User roles:', roles);
+  console.log('👑 Is Admin?', roles.includes('Admin'));
+  console.log('🏢 Is Recruiter?', roles.includes('Recruiter'));
+  if (roles.includes('Admin')) {
+    console.log('✅ Showing Admin menu...');
+    document.getElementById('nav-quantri-li').classList.remove('an');
+  } else {
+    console.log('❌ Not admin, hiding menu');
+  }
+  if (roles.includes('Recruiter')) {
+    console.log('✅ Showing Recruiter menu...');
+    document.getElementById('nav-recruiter-li').classList.remove('an');
+  } else {
+    console.log('❌ Not recruiter, hiding menu');
+  }
   hienTrang('trang-chu');
   taiThongKe();
 }
@@ -220,8 +235,26 @@ function batTatFormBai() {
   if (form) form.classList.toggle('an');
 }
 
-function batTatDangKyMentor() {
-  alert('Feature đăng ký mentor đang được phát triển');
+async function batTatDangKyMentor() {
+  try {
+    const hs = await layThongTinToiAPI();
+    const isMentor = hs?.profile?.isMentorAvailable || false;
+    const kq = await capNhatTrangThaiMentorAPI(!isMentor);
+    if (kq) {
+      hienToast(isMentor ? 'Đã tắt trạng thái Mentor ✓' : 'Đã đăng ký làm Mentor! 🌟');
+      // Update button text
+      const btn = document.getElementById('btnDangKyMentor');
+      if (btn) {
+        btn.textContent = isMentor ? 'Become a mentor' : '✓ Mentoring';
+        btn.classList.toggle('btn-secondary');
+        btn.classList.toggle('btn-success');
+      }
+      taiDanhSachMentor();
+    }
+  } catch (error) {
+    console.error('Error toggling mentor status:', error);
+    hienToast('Lỗi khi cập nhật trạng thái mentor', 'loi');
+  }
 }
 
 function batTatThongBao() {
@@ -1408,3 +1441,426 @@ window.tuChoiViec = tuChoiViec;
 window.duyetBai = duyetBai;
 window.xulyBaoCao = xulyBaoCao;
 window.khoaTaiKhoan = khoaTaiKhoan;
+
+
+// ===== RECRUITER - RECRUITMENT MANAGEMENT =====
+let viecCuaToi = [];
+let hoSoUngTuyenRecruiter = [];
+
+// Chuyển tab Recruiter
+function chuyenTabRecruiter(tab) {
+  // Hide all tabs
+  document.getElementById('bangViecRecruiter').classList.add('an');
+  document.getElementById('bangHoSoRecruiter').classList.add('an');
+  document.getElementById('bangProfileRecruiter').classList.add('an');
+  
+  // Deactivate all buttons
+  document.getElementById('tabViecRecruiter').classList.remove('active');
+  document.getElementById('tabHoSoRecruiter').classList.remove('active');
+  document.getElementById('tabProfileRecruiter').classList.remove('active');
+  
+  // Show selected tab
+  if (tab === 'viec') {
+    document.getElementById('bangViecRecruiter').classList.remove('an');
+    document.getElementById('tabViecRecruiter').classList.add('active');
+    taiViecCuaToi();
+  } else if (tab === 'hoso') {
+    document.getElementById('bangHoSoRecruiter').classList.remove('an');
+    document.getElementById('tabHoSoRecruiter').classList.add('active');
+    taiDanhSachViecChoDropdown();
+  } else if (tab === 'profile') {
+    document.getElementById('bangProfileRecruiter').classList.remove('an');
+    document.getElementById('tabProfileRecruiter').classList.add('active');
+    taiRecruiterProfile();
+  }
+}
+
+// Tải danh sách việc của tôi
+async function taiViecCuaToi() {
+  const container = document.getElementById('danhSachViecRecruiter');
+  container.innerHTML = '<div class="loading-spinner"><div class="spinner"></div><span style="margin-left:16px">Loading...</span></div>';
+  
+  try {
+    const res = await layTinTuyenDungCuaToiAPI();
+    viecCuaToi = res.data || [];
+    
+    document.getElementById('soViecRecruiter').textContent = viecCuaToi.length;
+    
+    if (viecCuaToi.length === 0) {
+      container.innerHTML = '<div style="text-align:center;padding:64px;color:var(--gray-500)"><div style="font-size:80px;margin-bottom:16px">📋</div><p style="font-size:18px">No job postings yet</p><p style="font-size:14px;margin-top:8px">Create your first job posting to start receiving applications</p></div>';
+      return;
+    }
+    
+    container.innerHTML = viecCuaToi.map(renderViecRecruiterCard).join('');
+    
+  } catch (error) {
+    console.error('Error loading my jobs:', error);
+    container.innerHTML = '<div style="text-align:center;padding:48px;color:var(--danger)"><p>Error loading your job postings</p></div>';
+  }
+}
+
+// Render job card cho recruiter
+function renderViecRecruiterCard(job) {
+  const statusClass = job.status === 'Approved' ? 'success' : job.status === 'Pending' ? 'warning' : 'secondary';
+  const postingStatusClass = job.postingStatus === 'Open' ? 'success' : 'secondary';
+  
+  return `
+    <div class="card" style="margin-bottom:16px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px">
+        <div style="flex:1">
+          <h3 style="font-size:20px;font-weight:600;margin-bottom:8px">${job.title}</h3>
+          <div style="display:flex;flex-wrap:wrap;gap:16px;font-size:14px;color:var(--gray-600);margin-bottom:12px">
+            <span>📍 ${job.location || 'N/A'}</span>
+            <span>💼 ${job.jobType || 'N/A'}</span>
+            <span>🕐 Posted ${formatThoiGian(job.createdAt)}</span>
+            <span>📅 Deadline: ${new Date(job.deadline).toLocaleDateString('vi-VN')}</span>
+          </div>
+          <p style="color:var(--gray-700);font-size:14px;margin-bottom:16px">${(job.description || '').substring(0, 150)}${job.description && job.description.length > 150 ? '...' : ''}</p>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
+          <span class="badge badge-${statusClass}">${job.status || 'Pending'}</span>
+          <span class="badge badge-${postingStatusClass}">${job.postingStatus || 'Open'}</span>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-sm btn-primary" onclick="xemHoSoViecRecruiter('${job._id}')">View Applications</button>
+        <button class="btn btn-sm btn-secondary" onclick="hienChinhSuaViec('${job._id}')">Edit</button>
+        ${job.postingStatus === 'Open' ? `<button class="btn btn-sm btn-warning" onclick="dongViecLam('${job._id}')">Close Job</button>` : ''}
+      </div>
+    </div>
+  `;
+}
+
+// Hiển thị form chỉnh sửa việc
+function hienChinhSuaViec(jobId) {
+  const job = viecCuaToi.find(v => v._id === jobId);
+  if (!job) return;
+  
+  document.getElementById('editViecId').value = jobId;
+  document.getElementById('editTieuDeViec').value = job.title || '';
+  document.getElementById('editViTriViec').value = job.position || '';
+  document.getElementById('editMoTaViec').value = job.description || '';
+  document.getElementById('editYeuCauViec').value = job.requirements || '';
+  document.getElementById('editHinhThucViec').value = job.jobType || '';
+  document.getElementById('editDiaDiemViec').value = job.location || '';
+  document.getElementById('editQuyenLoiViec').value = job.benefits || '';
+  document.getElementById('editCachUngTuyenViec').value = job.applicationMethod || '';
+  
+  // Format deadline for datetime-local input
+  if (job.deadline) {
+    const d = new Date(job.deadline);
+    const formatted = d.getFullYear() + '-' + 
+      String(d.getMonth() + 1).padStart(2, '0') + '-' + 
+      String(d.getDate()).padStart(2, '0') + 'T' + 
+      String(d.getHours()).padStart(2, '0') + ':' + 
+      String(d.getMinutes()).padStart(2, '0');
+    document.getElementById('editHanViec').value = formatted;
+  }
+  
+  document.getElementById('formEditViecRecruiter').classList.remove('an');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Hủy chỉnh sửa việc
+function huyChinhSuaViec() {
+  document.getElementById('formEditViecRecruiter').classList.add('an');
+}
+
+// Lưu chỉnh sửa việc
+async function luuChinhSuaViec() {
+  const jobId = document.getElementById('editViecId').value;
+  const title = document.getElementById('editTieuDeViec').value.trim();
+  const position = document.getElementById('editViTriViec').value.trim();
+  const description = document.getElementById('editMoTaViec').value.trim();
+  const requirements = document.getElementById('editYeuCauViec').value.trim();
+  const jobType = document.getElementById('editHinhThucViec').value;
+  const location = document.getElementById('editDiaDiemViec').value.trim();
+  const benefits = document.getElementById('editQuyenLoiViec').value.trim();
+  const applicationMethod = document.getElementById('editCachUngTuyenViec').value.trim();
+  const deadline = document.getElementById('editHanViec').value;
+  
+  if (!title || !position || !description || !requirements || !jobType || !location || !applicationMethod || !deadline) {
+    hienToast('Vui lòng điền đầy đủ thông tin bắt buộc', 'warning');
+    return;
+  }
+  
+  try {
+    await capNhatViecLamAPI(jobId, {
+      title,
+      position,
+      description,
+      requirements,
+      jobType,
+      location,
+      benefits,
+      applicationMethod,
+      deadline
+    });
+    
+    hienToast('Cập nhật tin tuyển dụng thành công');
+    huyChinhSuaViec();
+    taiViecCuaToi();
+    
+  } catch (error) {
+    console.error('Error updating job:', error);
+    hienToast('Lỗi khi cập nhật tin tuyển dụng', 'danger');
+  }
+}
+
+// Đóng việc làm
+async function dongViecLam(jobId) {
+  if (!confirm('Bạn có chắc chắn muốn đóng tin tuyển dụng này?')) return;
+  
+  try {
+    await dongViecLamAPI(jobId);
+    hienToast('Đã đóng tin tuyển dụng');
+    taiViecCuaToi();
+  } catch (error) {
+    console.error('Error closing job:', error);
+    hienToast('Lỗi khi đóng tin tuyển dụng', 'danger');
+  }
+}
+
+// Xem hồ sơ ứng tuyển của một việc (chuyển sang tab Applications)
+function xemHoSoViecRecruiter(jobId) {
+  chuyenTabRecruiter('hoso');
+  setTimeout(() => {
+    document.getElementById('chonViecXemHoSo').value = jobId;
+    taiHoSoTheoViec();
+  }, 100);
+}
+
+// Tải danh sách việc cho dropdown
+async function taiDanhSachViecChoDropdown() {
+  try {
+    const res = await layTinTuyenDungCuaToiAPI();
+    viecCuaToi = res.data || [];
+    
+    const select = document.getElementById('chonViecXemHoSo');
+    select.innerHTML = '<option value="">-- Select a job to view applications --</option>' +
+      viecCuaToi.filter(v => v.status === 'Approved').map(v => 
+        `<option value="${v._id}">${v.title}</option>`
+      ).join('');
+    
+    document.getElementById('soHoSoRecruiter').textContent = '0';
+    
+    // Clear applications list
+    document.getElementById('danhSachHoSoUngTuyen').innerHTML = '<div style="text-align:center;padding:48px;color:var(--gray-500)"><p>Select a job to view applications</p></div>';
+    
+  } catch (error) {
+    console.error('Error loading jobs for dropdown:', error);
+  }
+}
+
+// Tải hồ sơ theo việc
+async function taiHoSoTheoViec() {
+  const jobId = document.getElementById('chonViecXemHoSo').value;
+  const container = document.getElementById('danhSachHoSoUngTuyen');
+  
+  if (!jobId) {
+    container.innerHTML = '<div style="text-align:center;padding:48px;color:var(--gray-500)"><p>Select a job to view applications</p></div>';
+    document.getElementById('soHoSoRecruiter').textContent = '0';
+    return;
+  }
+  
+  container.innerHTML = '<div class="loading-spinner"><div class="spinner"></div><span style="margin-left:16px">Loading applications...</span></div>';
+  
+  try {
+    const res = await layHoSoTheoViecAPI(jobId);
+    hoSoUngTuyenRecruiter = res.data || [];
+    
+    document.getElementById('soHoSoRecruiter').textContent = hoSoUngTuyenRecruiter.length;
+    
+    if (hoSoUngTuyenRecruiter.length === 0) {
+      container.innerHTML = '<div style="text-align:center;padding:64px;color:var(--gray-500)"><div style="font-size:80px;margin-bottom:16px">📁</div><p style="font-size:18px">No applications yet</p></div>';
+      return;
+    }
+    
+    container.innerHTML = hoSoUngTuyenRecruiter.map(renderHoSoUngTuyenCard).join('');
+    
+  } catch (error) {
+    console.error('Error loading applications:', error);
+    container.innerHTML = '<div style="text-align:center;padding:48px;color:var(--danger)"><p>Error loading applications</p></div>';
+  }
+}
+
+// Render application card
+function renderHoSoUngTuyenCard(app) {
+  const statusColor = {
+    'Pending': '#856404',
+    'Reviewing': '#0c5460',
+    'Shortlisted': '#856404',
+    'Accepted': '#155724',
+    'Rejected': '#721c24',
+    'Withdrawn': '#6c757d'
+  };
+  
+  return `
+    <div class="card" style="margin-bottom:16px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <div style="display:flex;align-items:center;gap:16px;flex:1">
+          <div class="avatar-nho" style="font-size:20px;width:56px;height:56px">${app.applicantName ? app.applicantName[0].toUpperCase() : 'A'}</div>
+          <div style="flex:1">
+            <h4 style="font-size:18px;font-weight:600;margin-bottom:4px">${app.applicantName || 'N/A'}</h4>
+            <p style="font-size:14px;color:var(--gray-600);margin-bottom:8px">${app.applicantEmail || 'N/A'}</p>
+            ${app.resumeText ? `<p style="font-size:13px;color:var(--gray-600);margin-top:8px">${app.resumeText.substring(0, 100)}${app.resumeText.length > 100 ? '...' : ''}</p>` : ''}
+            <p style="font-size:13px;color:var(--gray-500);margin-top:8px">Applied ${formatThoiGian(app.appliedAt)}</p>
+          </div>
+        </div>
+        <div style="min-width:180px">
+          <select onchange="capNhatTrangThaiUngTuyen('${app._id}', this.value)" 
+                  value="${app.applicationStatus}"
+                  style="width:100%;padding:8px 12px;border:1px solid var(--gray-300);border-radius:6px;font-size:14px;font-weight:500;color:${statusColor[app.applicationStatus] || '#6c757d'}">
+            <option value="Pending" ${app.applicationStatus === 'Pending' ? 'selected' : ''}>Pending</option>
+            <option value="Reviewing" ${app.applicationStatus === 'Reviewing' ? 'selected' : ''}>Reviewing</option>
+            <option value="Shortlisted" ${app.applicationStatus === 'Shortlisted' ? 'selected' : ''}>Shortlisted</option>
+            <option value="Accepted" ${app.applicationStatus === 'Accepted' ? 'selected' : ''}>Accepted</option>
+            <option value="Rejected" ${app.applicationStatus === 'Rejected' ? 'selected' : ''}>Rejected</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// Cập nhật trạng thái ứng tuyển
+async function capNhatTrangThaiUngTuyen(appId, status) {
+  try {
+    await capNhatTrangThaiHoSoAPI(appId, status);
+    hienToast(`Đã cập nhật trạng thái thành ${status}`);
+  } catch (error) {
+    console.error('Error updating application status:', error);
+    hienToast('Lỗi khi cập nhật trạng thái', 'danger');
+    taiHoSoTheoViec(); // Reload to revert
+  }
+}
+
+// Tải Recruiter Profile
+async function taiRecruiterProfile() {
+  const displayContainer = document.getElementById('hienThiProfileRecruiter');
+  
+  try {
+    const res = await layRecruiterProfileToiAPI();
+    const profile = res.data;
+    
+    if (profile && profile.companyName) {
+      // Display existing profile
+      displayContainer.innerHTML = `
+        <div style="margin-bottom:24px">
+          <h3 style="font-size:16px;font-weight:600;color:var(--gray-700);margin-bottom:8px">Company Name</h3>
+          <p style="font-size:15px;color:var(--gray-900)">${profile.companyName}</p>
+        </div>
+        ${profile.industry ? `
+        <div style="margin-bottom:24px">
+          <h3 style="font-size:16px;font-weight:600;color:var(--gray-700);margin-bottom:8px">Industry</h3>
+          <p style="font-size:15px;color:var(--gray-900)">${profile.industry}</p>
+        </div>
+        ` : ''}
+        ${profile.companyDescription ? `
+        <div style="margin-bottom:24px">
+          <h3 style="font-size:16px;font-weight:600;color:var(--gray-700);margin-bottom:8px">About Company</h3>
+          <p style="font-size:15px;color:var(--gray-900);line-height:1.6">${profile.companyDescription}</p>
+        </div>
+        ` : ''}
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:24px">
+          ${profile.website ? `
+          <div>
+            <h3 style="font-size:16px;font-weight:600;color:var(--gray-700);margin-bottom:8px">Website</h3>
+            <p style="font-size:15px;color:var(--gray-900)"><a href="${profile.website}" target="_blank">${profile.website}</a></p>
+          </div>
+          ` : ''}
+          ${profile.companySize ? `
+          <div>
+            <h3 style="font-size:16px;font-weight:600;color:var(--gray-700);margin-bottom:8px">Company Size</h3>
+            <p style="font-size:15px;color:var(--gray-900)">${profile.companySize}</p>
+          </div>
+          ` : ''}
+          ${profile.contactEmail ? `
+          <div>
+            <h3 style="font-size:16px;font-weight:600;color:var(--gray-700);margin-bottom:8px">Contact Email</h3>
+            <p style="font-size:15px;color:var(--gray-900)">${profile.contactEmail}</p>
+          </div>
+          ` : ''}
+          ${profile.phoneNumber ? `
+          <div>
+            <h3 style="font-size:16px;font-weight:600;color:var(--gray-700);margin-bottom:8px">Phone</h3>
+            <p style="font-size:15px;color:var(--gray-900)">${profile.phoneNumber}</p>
+          </div>
+          ` : ''}
+        </div>
+      `;
+      
+      // Fill form
+      document.getElementById('tenCongTy').value = profile.companyName || '';
+      document.getElementById('nganhNghe').value = profile.industry || '';
+      document.getElementById('moTaCongTy').value = profile.companyDescription || '';
+      document.getElementById('websiteCongTy').value = profile.website || '';
+      document.getElementById('quyMoCongTy').value = profile.companySize || '';
+      document.getElementById('emailLienHe').value = profile.contactEmail || '';
+      document.getElementById('soDienThoai').value = profile.phoneNumber || '';
+      
+    } else {
+      displayContainer.innerHTML = `
+        <div style="text-align:center;padding:48px;color:var(--gray-500)">
+          <div style="font-size:64px;margin-bottom:16px">🏢</div>
+          <p>No company profile yet. Fill in the form below to create your profile.</p>
+        </div>
+      `;
+    }
+    
+  } catch (error) {
+    console.error('Error loading profile:', error);
+    displayContainer.innerHTML = `
+      <div style="text-align:center;padding:48px;color:var(--gray-500)">
+        <div style="font-size:64px;margin-bottom:16px">🏢</div>
+        <p>Complete the form below to create your company profile.</p>
+      </div>
+    `;
+  }
+}
+
+// Lưu Recruiter Profile
+async function luuRecruiterProfile() {
+  const companyName = document.getElementById('tenCongTy').value.trim();
+  const industry = document.getElementById('nganhNghe').value;
+  const companyDescription = document.getElementById('moTaCongTy').value.trim();
+  const website = document.getElementById('websiteCongTy').value.trim();
+  const companySize = document.getElementById('quyMoCongTy').value;
+  const contactEmail = document.getElementById('emailLienHe').value.trim();
+  const phoneNumber = document.getElementById('soDienThoai').value.trim();
+  
+  if (!companyName || !industry || !contactEmail) {
+    hienToast('Vui lòng điền các trường bắt buộc: Company Name, Industry, Contact Email', 'warning');
+    return;
+  }
+  
+  try {
+    await taoRecruiterProfileAPI({
+      companyName,
+      industry,
+      companyDescription,
+      website,
+      companySize,
+      contactEmail,
+      phoneNumber
+    });
+    
+    hienToast('Lưu company profile thành công');
+    taiRecruiterProfile();
+    
+  } catch (error) {
+    console.error('Error saving profile:', error);
+    hienToast('Lỗi khi lưu profile', 'danger');
+  }
+}
+
+// Expose new functions
+window.chuyenTabRecruiter = chuyenTabRecruiter;
+window.hienChinhSuaViec = hienChinhSuaViec;
+window.huyChinhSuaViec = huyChinhSuaViec;
+window.luuChinhSuaViec = luuChinhSuaViec;
+window.dongViecLam = dongViecLam;
+window.xemHoSoViecRecruiter = xemHoSoViecRecruiter;
+window.taiHoSoTheoViec = taiHoSoTheoViec;
+window.capNhatTrangThaiUngTuyen = capNhatTrangThaiUngTuyen;
+window.luuRecruiterProfile = luuRecruiterProfile;

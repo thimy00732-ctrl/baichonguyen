@@ -79,9 +79,26 @@ const layNguoiDungAdminAPI = () => goiAPI('/admin/users');
 // ===== RECRUITER PROFILE =====
 const taoRecruiterProfileAPI = (dl) => goiAPI('/recruiter-profile', 'POST', dl);
 const layRecruiterProfileToiAPI = () => goiAPI('/recruiter-profile/me');
+const layRecruiterProfileCuaToiAPI = () => goiAPI('/recruiter-profile/me');
 const layRecruiterProfileAPI = (id) => goiAPI(`/recruiter-profile/${id}`);
 const capNhatRecruiterProfileAPI = (dl) => goiAPI('/recruiter-profile', 'POST', dl);
 const xoaRecruiterProfileAPI = () => goiAPI('/recruiter-profile/me', 'DELETE', {});
+
+// ===== RECRUITER - MANAGE JOBS =====
+const layTinTuyenDungCuaToiAPI = () => goiAPI('/jobs/my-jobs');
+const apiLayTinTuyenDungCuaToi = () => goiAPI('/jobs/my-jobs');
+const apiTaoTinTuyenDung = (dl) => goiAPI('/jobs', 'POST', dl);
+const apiCapNhatTinTuyenDung = (id, dl) => goiAPI(`/jobs/${id}`, 'PUT', dl);
+const apiDongTinTuyenDung = (id) => goiAPI(`/jobs/${id}/close`, 'PUT', {});
+
+// ===== RECRUITER - MANAGE APPLICATIONS =====
+const layHoSoTheoViecAPI = (jobId) => goiAPI(`/applications/job/${jobId}`);
+const apiLayHoSoTheoViec = (jobId) => goiAPI(`/applications/job/${jobId}`);
+const apiCapNhatTrangThaiHoSo = (appId, status) => goiAPI(`/applications/${appId}/status`, 'PUT', { status });
+
+// ===== RECRUITER - PROFILE =====
+const apiLayRecruiterProfileCuaToi = () => goiAPI('/recruiter-profile/me');
+const apiTaoRecruiterProfile = (dl) => goiAPI('/recruiter-profile', 'POST', dl);
 
 // ===== EXPOSE API FUNCTIONS TO GLOBAL SCOPE =====
 window.goiAPI = goiAPI;
@@ -127,6 +144,17 @@ window.layBaiChoDuyetAPI = layBaiChoDuyetAPI;
 window.layNguoiDungAdminAPI = layNguoiDungAdminAPI;
 window.taoRecruiterProfileAPI = taoRecruiterProfileAPI;
 window.layRecruiterProfileToiAPI = layRecruiterProfileToiAPI;
+window.layRecruiterProfileCuaToiAPI = layRecruiterProfileCuaToiAPI;
 window.layRecruiterProfileAPI = layRecruiterProfileAPI;
 window.capNhatRecruiterProfileAPI = capNhatRecruiterProfileAPI;
 window.xoaRecruiterProfileAPI = xoaRecruiterProfileAPI;
+window.layTinTuyenDungCuaToiAPI = layTinTuyenDungCuaToiAPI;
+window.layHoSoTheoViecAPI = layHoSoTheoViecAPI;
+window.apiLayTinTuyenDungCuaToi = apiLayTinTuyenDungCuaToi;
+window.apiTaoTinTuyenDung = apiTaoTinTuyenDung;
+window.apiCapNhatTinTuyenDung = apiCapNhatTinTuyenDung;
+window.apiDongTinTuyenDung = apiDongTinTuyenDung;
+window.apiLayHoSoTheoViec = apiLayHoSoTheoViec;
+window.apiCapNhatTrangThaiHoSo = apiCapNhatTrangThaiHoSo;
+window.apiLayRecruiterProfileCuaToi = apiLayRecruiterProfileCuaToi;
+window.apiTaoRecruiterProfile = apiTaoRecruiterProfile;

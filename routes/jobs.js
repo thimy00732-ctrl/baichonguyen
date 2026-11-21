@@ -82,6 +82,23 @@ router.get('/', authenticate, async (req, res) => {
   }
 });
 
+// Lấy danh sách tin tuyển dụng của recruiter hiện tại
+router.get('/my-jobs', authenticate, async (req, res) => {
+  try {
+    const jobs = await JobPosting.find({ creatorId: req.user._id })
+      .populate('creatorId', 'email fullName')
+      .sort({ createdAt: -1 });
+
+    res.json({
+      success: true,
+      data: jobs,
+      message: 'My jobs retrieved successfully'
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching my jobs', error: error.message });
+  }
+});
+
 // Lấy chi tiết tin tuyển dụng
 router.get('/:jobId', authenticate, async (req, res) => {
   try {
