@@ -3,208 +3,523 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Alumni Student Network - Kết nối Cựu Sinh Viên & Sinh Viên</title>
+  <title>AlumniNet – Kết Nối Cựu Sinh Viên & Sinh Viên</title>
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-  <div id="app">
-    <!-- Navigation -->
-    <nav class="navbar">
-      <div class="container">
-        <div class="navbar-brand">
-          <h1>🎓 Alumni Network</h1>
+
+<!-- ===== TRANG ĐĂNG NHẬP / ĐĂNG KÝ ===== -->
+<div id="trang-auth" class="trang active">
+  <div class="auth-wrapper">
+    <div class="auth-card">
+      <div class="auth-trai">
+        <div class="auth-brand">
+          <span class="auth-logo">🎓</span>
+          <span class="auth-tensite">AlumniNet</span>
         </div>
-        <ul class="nav-menu" id="navMenu">
-          <li><a href="/" onclick="showPage('home', event)">Home</a></li>
-          <li><a href="/" onclick="showPage('jobs', event)">Việc Làm</a></li>
-          <li><a href="/" onclick="showPage('posts', event)">Cộng Đồng</a></li>
-          <li><a href="/" onclick="showPage('mentors', event)">Mentor</a></li>
-          <li><a href="/" onclick="showPage('profile', event)">Hồ Sơ</a></li>
-          <li><button onclick="logout()" class="btn-logout">Đăng Xuất</button></li>
-        </ul>
+        <h2>Nền tảng kết nối<br>Cựu sinh viên & Sinh viên</h2>
+        <p>Tìm kiếm cơ hội thực tập, việc làm, kết nối mentor và chia sẻ kinh nghiệm trong cộng đồng nhà trường.</p>
+        <div class="auth-tinh-nang">
+          <div class="auth-item"><span class="auth-icon">💼</span><span>Hàng trăm cơ hội việc làm chất lượng</span></div>
+          <div class="auth-item"><span class="auth-icon">🤝</span><span>Kết nối với mentor giàu kinh nghiệm</span></div>
+          <div class="auth-item"><span class="auth-icon">💬</span><span>Cộng đồng chia sẻ kiến thức sôi nổi</span></div>
+          <div class="auth-item"><span class="auth-icon">🏫</span><span>Mạng lưới alumni toàn trường</span></div>
+        </div>
       </div>
-    </nav>
-
-    <!-- Main Content -->
-    <div class="container main-content">
-      <!-- Login & Register Form -->
-      <div id="auth-page" class="page active">
-        <div class="auth-container">
-          <div class="auth-form" id="loginForm">
-            <h2>Đăng Nhập</h2>
-            <input type="email" id="loginEmail" placeholder="Email" required>
-            <input type="password" id="loginPassword" placeholder="Mật khẩu" required>
-            <button onclick="login()" class="btn btn-primary">Đăng Nhập</button>
-            <p>Chưa có tài khoản? <a href="#" onclick="toggleForm(event)">Đăng Ký</a></p>
+      <div class="auth-phai">
+        <!-- Form Đăng Nhập -->
+        <div id="formDangNhap">
+          <h3>Đăng Nhập</h3>
+          <p class="auth-phude">Chào mừng bạn quay trở lại! 👋</p>
+          <div class="nhom-input">
+            <label>Email</label>
+            <input type="email" id="emailDangNhap" placeholder="email@example.com">
           </div>
-
-          <div class="auth-form hidden" id="registerForm">
-            <h2>Đăng Ký</h2>
-            <input type="email" id="regEmail" placeholder="Email" required>
-            <input type="password" id="regPassword" placeholder="Mật khẩu" required>
-            <input type="text" id="regFullName" placeholder="Họ và Tên" required>
-            <select id="regRole" required>
+          <div class="nhom-input">
+            <label>Mật khẩu</label>
+            <input type="password" id="matKhauDangNhap" placeholder="Nhập mật khẩu" onkeydown="if(event.key==='Enter') dangNhap()">
+          </div>
+          <button class="btn-auth" onclick="dangNhap()">Đăng Nhập</button>
+          <p class="auth-chuyen">Chưa có tài khoản? <a onclick="chuyenForm()">Đăng ký ngay</a></p>
+        </div>
+        <!-- Form Đăng Ký -->
+        <div id="formDangKy" class="an">
+          <h3>Đăng Ký</h3>
+          <p class="auth-phude">Tham gia cộng đồng AlumniNet ngay! 🚀</p>
+          <div class="nhom-input">
+            <label>Họ và tên *</label>
+            <input type="text" id="hoTenDangKy" placeholder="Nguyễn Văn A">
+          </div>
+          <div class="nhom-input">
+            <label>Email *</label>
+            <input type="email" id="emailDangKy" placeholder="email@example.com">
+          </div>
+          <div class="nhom-input">
+            <label>Mật khẩu *</label>
+            <input type="password" id="matKhauDangKy" placeholder="Tối thiểu 6 ký tự">
+          </div>
+          <div class="nhom-input">
+            <label>Vai trò *</label>
+            <select id="vaiTroDangKy">
               <option value="">-- Chọn vai trò --</option>
-              <option value="Student">Sinh Viên</option>
-              <option value="Alumni">Cựu Sinh Viên</option>
-              <option value="Recruiter">Nhà Tuyển Dụng</option>
+              <option value="Student">🎓 Sinh Viên</option>
+              <option value="Alumni">👨‍💼 Cựu Sinh Viên</option>
+              <option value="Recruiter">🏢 Nhà Tuyển Dụng</option>
             </select>
-            <button onclick="register()" class="btn btn-primary">Đăng Ký</button>
-            <p>Đã có tài khoản? <a href="#" onclick="toggleForm(event)">Đăng Nhập</a></p>
           </div>
+          <button class="btn-auth" onclick="dangKy()">Tạo Tài Khoản</button>
+          <p class="auth-chuyen">Đã có tài khoản? <a onclick="chuyenForm()">Đăng nhập</a></p>
         </div>
-      </div>
-
-      <!-- Home Page -->
-      <div id="home-page" class="page">
-        <div class="hero">
-          <h2>Chào mừng đến Alumni Network</h2>
-          <p>Kết nối cựu sinh viên - sinh viên, chia sẻ kinh nghiệm và cơ hội nghề nghiệp</p>
-        </div>
-        <div class="stats">
-          <div class="stat-box">
-            <h3 id="totalUsers">--</h3>
-            <p>Người Dùng</p>
-          </div>
-          <div class="stat-box">
-            <h3 id="totalJobs">--</h3>
-            <p>Việc Làm</p>
-          </div>
-          <div class="stat-box">
-            <h3 id="totalPosts">--</h3>
-            <p>Bài Viết</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Jobs Page -->
-      <div id="jobs-page" class="page">
-        <h2>Cơ Hội Việc Làm & Thực Tập</h2>
-        
-        <div class="search-filter">
-          <input type="text" id="jobSearch" placeholder="Tìm kiếm công việc..." onkeyup="searchJobs()">
-          <select id="jobType" onchange="filterJobs()">
-            <option value="">Tất cả</option>
-            <option value="Internship">Thực Tập</option>
-            <option value="Full-time">Toàn thời gian</option>
-            <option value="Part-time">Bán thời gian</option>
-          </select>
-          <button onclick="showCreateJobForm()" class="btn btn-primary">+ Đăng Tin</button>
-        </div>
-
-        <!-- Create Job Form -->
-        <div id="createJobForm" class="form-container hidden">
-          <h3>Đăng Tin Tuyển Dụng</h3>
-          <input type="text" id="jobTitle" placeholder="Tiêu đề" required>
-          <input type="text" id="jobPosition" placeholder="Vị trí" required>
-          <textarea id="jobDescription" placeholder="Mô tả công việc" required></textarea>
-          <textarea id="jobRequirements" placeholder="Yêu cầu kỹ năng" required></textarea>
-          <select id="jobJobType" required>
-            <option value="">-- Hình thức --</option>
-            <option value="Internship">Thực Tập</option>
-            <option value="Full-time">Toàn thời gian</option>
-            <option value="Part-time">Bán thời gian</option>
-          </select>
-          <input type="text" id="jobLocation" placeholder="Địa điểm" required>
-          <textarea id="jobBenefits" placeholder="Quyền lợi"></textarea>
-          <input type="text" id="jobApplicationMethod" placeholder="Cách ứng tuyển / Link" required>
-          <input type="datetime-local" id="jobDeadline" required>
-          <button onclick="createJob()" class="btn btn-success">Đăng Tin</button>
-          <button onclick="hideCreateJobForm()" class="btn btn-secondary">Hủy</button>
-        </div>
-
-        <div id="jobsList" class="jobs-list"></div>
-      </div>
-
-      <!-- Posts Page -->
-      <div id="posts-page" class="page">
-        <h2>Cộng Đồng Chia Sẻ</h2>
-        
-        <div class="post-controls">
-          <button onclick="showCreatePostForm()" class="btn btn-primary">+ Viết Bài</button>
-          <select id="postCategory" onchange="filterPosts()">
-            <option value="">Tất cả</option>
-            <option value="Experience">Kinh Nghiệm</option>
-            <option value="Question">Câu Hỏi</option>
-            <option value="CareerAdvice">Tư Vấn Sự Nghiệp</option>
-            <option value="JobShare">Chia Sẻ Việc Làm</option>
-          </select>
-        </div>
-
-        <!-- Create Post Form -->
-        <div id="createPostForm" class="form-container hidden">
-          <h3>Viết Bài Mới</h3>
-          <select id="postPostCategory" required>
-            <option value="">-- Danh mục --</option>
-            <option value="Experience">Kinh Nghiệm</option>
-            <option value="Question">Câu Hỏi</option>
-            <option value="CareerAdvice">Tư Vấn Sự Nghiệp</option>
-            <option value="JobShare">Chia Sẻ Việc Làm</option>
-          </select>
-          <input type="text" id="postTitle" placeholder="Tiêu đề" required>
-          <textarea id="postContent" placeholder="Nội dung bài viết" required></textarea>
-          <button onclick="createPost()" class="btn btn-success">Đăng Bài</button>
-          <button onclick="hideCreatePostForm()" class="btn btn-secondary">Hủy</button>
-        </div>
-
-        <div id="postsList" class="posts-list"></div>
-      </div>
-
-      <!-- Mentors Page -->
-      <div id="mentors-page" class="page">
-        <h2>Tìm Mentor</h2>
-        
-        <div class="search-filter">
-          <input type="text" id="mentorSearch" placeholder="Tìm mentor..." onkeyup="searchMentors()">
-          <input type="text" id="mentorSkills" placeholder="Kỹ năng..." onkeyup="searchMentors()">
-        </div>
-
-        <div id="mentorsList" class="mentors-list"></div>
-      </div>
-
-      <!-- Profile Page -->
-      <div id="profile-page" class="page">
-        <h2>Hồ Sơ Cá Nhân</h2>
-        
-        <div id="profileInfo" class="profile-info"></div>
-        
-        <div id="editProfileForm" class="form-container hidden">
-          <h3>Chỉnh Sửa Hồ Sơ</h3>
-          <input type="text" id="profileFullName" placeholder="Họ và Tên" required>
-          <input type="text" id="profileMajor" placeholder="Chuyên ngành">
-          <input type="number" id="profileGraduationYear" placeholder="Năm tốt nghiệp">
-          <input type="text" id="profileCurrentCompany" placeholder="Công ty hiện tại">
-          <input type="text" id="profileJobTitle" placeholder="Chức danh">
-          <input type="text" id="profileSkills" placeholder="Kỹ năng (cách nhau bằng dấu phẩy)">
-          <textarea id="profileBio" placeholder="Giới thiệu"></textarea>
-          <label>
-            <input type="checkbox" id="profileIsMentorAvailable"> Sẵn sàng làm mentor
-          </label>
-          <button onclick="updateProfile()" class="btn btn-success">Lưu</button>
-          <button onclick="hideEditProfileForm()" class="btn btn-secondary">Hủy</button>
-        </div>
-      </div>
-
-      <!-- Admin Panel -->
-      <div id="admin-page" class="page hidden">
-        <h2>Bảng Điều Khiển Admin</h2>
-        
-        <div class="admin-tabs">
-          <button onclick="showAdminTab('jobs')" class="tab-btn">Duyệt Tin Tuyển Dụng</button>
-          <button onclick="showAdminTab('posts')" class="tab-btn">Duyệt Bài Viết</button>
-          <button onclick="showAdminTab('reports')" class="tab-btn">Báo Cáo Vi Phạm</button>
-          <button onclick="showAdminTab('stats')" class="tab-btn">Thống Kê</button>
-        </div>
-
-        <div id="admin-jobs" class="admin-tab"></div>
-        <div id="admin-posts" class="admin-tab"></div>
-        <div id="admin-reports" class="admin-tab"></div>
-        <div id="admin-stats" class="admin-tab"></div>
       </div>
     </div>
   </div>
+</div>
 
-  <script src="/js/api.js"></script>
-  <script src="/js/app.js"></script>
+<!-- ===== ỨNG DỤNG CHÍNH ===== -->
+<div id="ungDung" class="an">
+
+  <!-- Thanh điều hướng -->
+  <nav class="navbar">
+    <div class="container navbar-inner">
+      <a class="navbar-logo" onclick="hienTrang('trang-chu')">
+        <span class="logo-icon">🎓</span>
+        <span class="logo-ten">AlumniNet</span>
+      </a>
+      <ul class="nav-menu">
+        <li><a id="nav-trang-chu" onclick="hienTrang('trang-chu')">🏠 Trang Chủ</a></li>
+        <li><a id="nav-viec-lam" onclick="hienTrang('viec-lam')">💼 Việc Làm</a></li>
+        <li><a id="nav-cong-dong" onclick="hienTrang('cong-dong')">💬 Cộng Đồng</a></li>
+        <li><a id="nav-mentor" onclick="hienTrang('mentor')">🤝 Mentor</a></li>
+        <li><a id="nav-ho-so" onclick="hienTrang('ho-so')">👤 Hồ Sơ</a></li>
+        <li id="nav-quantri-li" class="an"><a id="nav-quantri" onclick="hienTrang('quantri')">⚙️ Quản Trị</a></li>
+      </ul>
+      <div class="nav-phai">
+        <div class="nav-thongbao" onclick="batTatThongBao()">
+          🔔
+          <span class="thongbao-cham an" id="chamThongBao"></span>
+          <div class="thongbao-dropdown an" id="hopThongBao">
+            <div class="thongbao-tieude">🔔 Thông báo</div>
+            <div id="danhSachThongBao"><p style="padding:20px;text-align:center;color:#6b7280">Chưa có thông báo</p></div>
+          </div>
+        </div>
+        <div class="nav-nguoidung">
+          <div class="avatar-nho" id="avatarNhoBienThuc">U</div>
+          <span id="tenNguoiDung">Người dùng</span>
+        </div>
+        <button class="btn-dangxuat" onclick="dangXuat()">Đăng Xuất</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container noi-dung-chinh">
+
+    <!-- ===== TRANG CHỦ ===== -->
+    <div id="trang-chu" class="trang">
+      <div class="hero-block">
+        <div class="hero-noi-dung">
+          <h1>Khám phá cơ hội nghề nghiệp<br>từ cộng đồng Alumni 🎓</h1>
+          <p>Kết nối với hàng nghìn cựu sinh viên, tìm kiếm việc làm phù hợp và học hỏi từ những người đi trước.</p>
+          <div class="hero-timkiem">
+            <input type="text" id="timKiemHero" placeholder="🔍  Tìm kiếm việc làm, mentor, bài viết...">
+            <button class="btn btn-xanh btn-lon" onclick="timKiemHero()">Tìm Kiếm</button>
+          </div>
+          <div class="hero-thongke">
+            <div class="hero-so"><div class="so" id="heroTongNguoi">--</div><div class="nhan">Thành viên</div></div>
+            <div class="hero-so"><div class="so" id="heroTongViec">--</div><div class="nhan">Việc làm</div></div>
+            <div class="hero-so"><div class="so" id="heroTongBai">--</div><div class="nhan">Bài viết</div></div>
+            <div class="hero-so"><div class="so" id="heroTongMentor">--</div><div class="nhan">Mentor</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Truy cập nhanh -->
+      <div class="luoi-thongke">
+        <div class="the-thongke" onclick="hienTrang('viec-lam')">
+          <div class="the-icon">💼</div><div class="the-so" id="tkViec">--</div>
+          <div class="the-nhan">Việc làm đang tuyển</div>
+        </div>
+        <div class="the-thongke" onclick="hienTrang('mentor')">
+          <div class="the-icon">🤝</div><div class="the-so" id="tkMentor">--</div>
+          <div class="the-nhan">Mentor sẵn sàng hỗ trợ</div>
+        </div>
+        <div class="the-thongke" onclick="hienTrang('cong-dong')">
+          <div class="the-icon">💬</div><div class="the-so" id="tkBai">--</div>
+          <div class="the-nhan">Bài viết chia sẻ</div>
+        </div>
+        <div class="the-thongke">
+          <div class="the-icon">👥</div><div class="the-so" id="tkNguoi">--</div>
+          <div class="the-nhan">Thành viên cộng đồng</div>
+        </div>
+      </div>
+
+      <!-- Việc làm mới nhất -->
+      <div class="tieu-de-trang">
+        <div><h2>💼 Việc Làm Mới Nhất</h2><p>Các cơ hội thực tập và việc làm hấp dẫn từ cộng đồng</p></div>
+        <button class="btn btn-vien" onclick="hienTrang('viec-lam')">Xem tất cả →</button>
+      </div>
+      <div id="viecLamTrangChu" class="luoi-viec"></div>
+
+      <!-- Bài viết nổi bật -->
+      <div class="tieu-de-trang" style="margin-top:48px">
+        <div><h2>💬 Bài Viết Nổi Bật</h2><p>Chia sẻ kinh nghiệm và tư vấn từ cựu sinh viên</p></div>
+        <button class="btn btn-vien" onclick="hienTrang('cong-dong')">Xem tất cả →</button>
+      </div>
+      <div id="baiVietTrangChu" class="luoi-bai"></div>
+    </div>
+
+    <!-- ===== VIỆC LÀM ===== -->
+    <div id="viec-lam" class="trang">
+      <div class="tieu-de-trang">
+        <div><h2>💼 Việc Làm & Thực Tập</h2><p>Tìm kiếm cơ hội phù hợp với bạn</p></div>
+        <button class="btn btn-xanh" id="btnDangTin" onclick="batTatFormViec()">➕ Đăng Tin Tuyển Dụng</button>
+      </div>
+
+      <!-- Bộ lọc -->
+      <div class="bo-loc">
+        <input type="text" id="timKiemViec" placeholder="🔍  Tìm theo tên, mô tả...">
+        <select id="loaiViecLoc">
+          <option value="">📋 Tất cả loại hình</option>
+          <option value="Internship">🎓 Thực tập</option>
+          <option value="Full-time">⏰ Toàn thời gian</option>
+          <option value="Part-time">🕐 Bán thời gian</option>
+        </select>
+        <input type="text" id="diaDiemViecLoc" placeholder="📍 Địa điểm...">
+        <button class="btn btn-xanh" onclick="taiDanhSachViec()">🔍 Tìm</button>
+      </div>
+
+      <!-- Form tạo việc làm -->
+      <div id="formViecLam" class="the-form an">
+        <h3>📝 Đăng Tin Tuyển Dụng Mới</h3>
+        <div class="hang-form">
+          <div class="nhom-input"><label>Tiêu đề *</label><input type="text" id="tieuDeViec" placeholder="VD: Frontend Developer – Fresher"></div>
+          <div class="nhom-input"><label>Vị trí *</label><input type="text" id="viTriViec" placeholder="VD: Frontend Developer"></div>
+        </div>
+        <div class="nhom-input"><label>Mô tả công việc *</label><textarea id="moTaViec" placeholder="Mô tả chi tiết công việc..."></textarea></div>
+        <div class="nhom-input"><label>Yêu cầu kỹ năng *</label><textarea id="yeuCauViec" placeholder="Yêu cầu về kỹ năng, kinh nghiệm..."></textarea></div>
+        <div class="hang-form">
+          <div class="nhom-input">
+            <label>Hình thức làm việc *</label>
+            <select id="hinhThucViec">
+              <option value="">-- Chọn --</option>
+              <option value="Internship">Thực tập</option>
+              <option value="Full-time">Toàn thời gian</option>
+              <option value="Part-time">Bán thời gian</option>
+            </select>
+          </div>
+          <div class="nhom-input"><label>Địa điểm *</label><input type="text" id="diaDiemViec" placeholder="VD: Hà Nội, Remote..."></div>
+        </div>
+        <div class="nhom-input"><label>Quyền lợi</label><textarea id="quyenLoiViec" placeholder="Lương, bảo hiểm, thưởng..."></textarea></div>
+        <div class="hang-form">
+          <div class="nhom-input"><label>Cách ứng tuyển *</label><input type="text" id="cachUngTuyenViec" placeholder="Email hoặc link ứng tuyển"></div>
+          <div class="nhom-input"><label>Hạn ứng tuyển *</label><input type="datetime-local" id="hanViec"></div>
+        </div>
+        <div class="nhom-nut">
+          <button class="btn btn-xanh" onclick="taoViecLam()">📤 Đăng Tin</button>
+          <button class="btn btn-xam" onclick="batTatFormViec()">Hủy</button>
+        </div>
+      </div>
+
+      <div id="danhSachViec" class="luoi-viec">
+        <div class="dang-tai"><div class="vong-quay"></div> Đang tải...</div>
+      </div>
+    </div>
+
+    <!-- ===== CỘNG ĐỒNG ===== -->
+    <div id="cong-dong" class="trang">
+      <div class="tieu-de-trang">
+        <div><h2>💬 Cộng Đồng Chia Sẻ</h2><p>Chia sẻ kinh nghiệm, đặt câu hỏi và kết nối cùng nhau</p></div>
+        <button class="btn btn-xanh" onclick="batTatFormBai()">✏️ Viết Bài Mới</button>
+      </div>
+
+      <div class="bo-loc">
+        <input type="text" id="timKiemBai" placeholder="🔍  Tìm kiếm bài viết...">
+        <select id="danhMucBaiLoc">
+          <option value="">📋 Tất cả danh mục</option>
+          <option value="Experience">💡 Kinh nghiệm</option>
+          <option value="Question">❓ Câu hỏi</option>
+          <option value="CareerAdvice">🎯 Tư vấn nghề nghiệp</option>
+          <option value="JobShare">💼 Chia sẻ việc làm</option>
+        </select>
+        <button class="btn btn-xanh" onclick="taiDanhSachBai()">🔍 Tìm</button>
+      </div>
+
+      <!-- Form viết bài -->
+      <div id="formBaiViet" class="the-form an">
+        <h3>✏️ Viết Bài Mới</h3>
+        <div class="hang-form">
+          <div class="nhom-input">
+            <label>Danh mục *</label>
+            <select id="danhMucBai">
+              <option value="">-- Chọn danh mục --</option>
+              <option value="Experience">💡 Kinh nghiệm</option>
+              <option value="Question">❓ Câu hỏi</option>
+              <option value="CareerAdvice">🎯 Tư vấn nghề nghiệp</option>
+              <option value="JobShare">💼 Chia sẻ việc làm</option>
+            </select>
+          </div>
+          <div class="nhom-input"><label>Tiêu đề *</label><input type="text" id="tieuDeBai" placeholder="Tiêu đề bài viết..."></div>
+        </div>
+        <div class="nhom-input"><label>Nội dung *</label><textarea id="noiDungBai" style="min-height:160px" placeholder="Chia sẻ kinh nghiệm, câu hỏi hoặc thông tin hữu ích..."></textarea></div>
+        <div class="nhom-nut">
+          <button class="btn btn-xanh" onclick="taoBaiViet()">📤 Đăng Bài</button>
+          <button class="btn btn-xam" onclick="batTatFormBai()">Hủy</button>
+        </div>
+      </div>
+
+      <div id="danhSachBai" class="luoi-bai">
+        <div class="dang-tai"><div class="vong-quay"></div> Đang tải...</div>
+      </div>
+    </div>
+
+    <!-- ===== MENTOR ===== -->
+    <div id="mentor" class="trang">
+      <div class="tieu-de-trang">
+        <div><h2>🤝 Tìm Mentor</h2><p>Kết nối với cựu sinh viên có kinh nghiệm để được tư vấn nghề nghiệp</p></div>
+        <button class="btn btn-vien" id="btnDangKyMentor" onclick="batTatDangKyMentor()">🌟 Đăng Ký Làm Mentor</button>
+      </div>
+
+      <div class="bo-loc">
+        <input type="text" id="timKiemMentor" placeholder="🔍  Tìm theo tên, công ty...">
+        <input type="text" id="chuyenNganhMentor" placeholder="📚 Chuyên ngành...">
+        <input type="text" id="kyNangMentor" placeholder="⚡ Kỹ năng (VD: React, Python...)">
+        <button class="btn btn-xanh" onclick="taiDanhSachMentor()">🔍 Tìm</button>
+      </div>
+
+      <!-- Form gửi yêu cầu mentor -->
+      <div id="formYeuCauMentor" class="the-form an">
+        <h3>📩 Gửi Yêu Cầu Tư Vấn</h3>
+        <input type="hidden" id="alumniIdYeuCau">
+        <div class="nhom-input"><label>Chủ đề tư vấn *</label><input type="text" id="chuDeMentor" placeholder="VD: Định hướng nghề nghiệp, Review CV, Chuẩn bị phỏng vấn..."></div>
+        <div class="nhom-input"><label>Nội dung yêu cầu *</label><textarea id="noiDungMentor" placeholder="Mô tả chi tiết bạn cần hỗ trợ gì..."></textarea></div>
+        <div class="nhom-nut">
+          <button class="btn btn-xanh" onclick="guiYeuCauMentor()">📤 Gửi Yêu Cầu</button>
+          <button class="btn btn-xam" onclick="anFormMentor()">Hủy</button>
+        </div>
+      </div>
+
+      <div id="danhSachMentor" class="luoi-mentor">
+        <div class="dang-tai"><div class="vong-quay"></div> Đang tải...</div>
+      </div>
+    </div>
+
+    <!-- ===== HỒ SƠ ===== -->
+    <div id="ho-so" class="trang">
+      <div class="tieu-de-trang">
+        <div><h2>👤 Hồ Sơ Cá Nhân</h2><p>Quản lý thông tin và cài đặt tài khoản</p></div>
+        <button class="btn btn-xanh" onclick="hienFormSuaHoSo()">✏️ Chỉnh Sửa Hồ Sơ</button>
+      </div>
+
+      <div class="bo-cuc-hoso">
+        <!-- Cột trái -->
+        <div class="hoso-trai">
+          <div class="the-hoso">
+            <div class="avatar-lon" id="avatarLon">U</div>
+            <div class="hoso-ten" id="hosoTen">--</div>
+            <div class="hoso-vaitro" id="hosoVaiTro">--</div>
+            <div class="hoso-email" id="hosoEmail">--</div>
+            <div class="hoso-thongke">
+              <div class="hoso-so"><div class="so" id="soUngTuyen">0</div><div class="nhan">Đã ứng tuyển</div></div>
+              <div class="hoso-so"><div class="so" id="soBaiViet">0</div><div class="nhan">Bài viết</div></div>
+            </div>
+            <button class="btn btn-vien" style="width:100%" onclick="hienFormSuaHoSo()">✏️ Chỉnh Sửa</button>
+          </div>
+
+          <!-- Hồ sơ ứng tuyển của tôi -->
+          <div class="the-trang">
+            <div class="tieu-de-the">📋 Hồ Sơ Ứng Tuyển Của Tôi</div>
+            <div id="danhSachUngTuyenCuaToi"><p style="color:#6b7280;text-align:center;padding:16px">Chưa có hồ sơ nào</p></div>
+          </div>
+
+          <!-- Yêu cầu mentor đã gửi -->
+          <div class="the-trang">
+            <div class="tieu-de-the">🤝 Yêu Cầu Mentor Đã Gửi</div>
+            <div id="danhSachYeuCauMentor"><p style="color:#6b7280;text-align:center;padding:16px">Chưa có yêu cầu nào</p></div>
+          </div>
+
+          <!-- Yêu cầu mentor nhận được (dành cho Alumni) -->
+          <div class="the-trang" id="blockYeuCauNhanDuoc" style="display:none">
+            <div class="tieu-de-the">📥 Yêu Cầu Mentor Nhận Được</div>
+            <div id="danhSachYeuCauNhanDuoc"><p style="color:#6b7280;text-align:center;padding:16px">Chưa có yêu cầu nào</p></div>
+          </div>
+        </div>
+
+        <!-- Cột phải -->
+        <div class="hoso-phai">
+          <!-- Hiển thị thông tin -->
+          <div class="the-trang" id="hienThiHoSo">
+            <div class="tieu-de-the">📋 Thông Tin Cá Nhân</div>
+            <div class="luoi-thongtin">
+              <div class="muc-thongtin"><label>Họ và tên</label><span id="tt-ten">--</span></div>
+              <div class="muc-thongtin"><label>Email</label><span id="tt-email">--</span></div>
+              <div class="muc-thongtin"><label>Mã số sinh viên</label><span id="tt-mssv">--</span></div>
+              <div class="muc-thongtin"><label>Chuyên ngành</label><span id="tt-nganh">--</span></div>
+              <div class="muc-thongtin"><label>Năm tốt nghiệp</label><span id="tt-nam">--</span></div>
+              <div class="muc-thongtin"><label>Công ty hiện tại</label><span id="tt-congty">--</span></div>
+              <div class="muc-thongtin"><label>Chức danh</label><span id="tt-chucvu">--</span></div>
+              <div class="muc-thongtin"><label>Điện thoại</label><span id="tt-dienthoai">--</span></div>
+            </div>
+            <div style="margin-top:20px">
+              <label class="nhan-phu">Kỹ năng</label>
+              <div id="tt-kynang" style="margin-top:8px;display:flex;flex-wrap:wrap;gap:8px"></div>
+            </div>
+            <div style="margin-top:20px">
+              <label class="nhan-phu">Giới thiệu bản thân</label>
+              <p id="tt-gioithieu" style="margin-top:6px;line-height:1.7;color:#374151">--</p>
+            </div>
+            <div style="margin-top:20px">
+              <label class="nhan-phu">Link CV mặc định</label>
+              <p id="tt-cv" style="margin-top:6px"><a id="tt-cv-link" href="#" target="_blank" style="color:#00b14f">--</a></p>
+            </div>
+          </div>
+
+          <!-- Form chỉnh sửa hồ sơ -->
+          <div class="the-form an" id="formSuaHoSo">
+            <h3>✏️ Chỉnh Sửa Hồ Sơ</h3>
+            <div class="hang-form">
+              <div class="nhom-input"><label>Họ và tên *</label><input type="text" id="suaTen" placeholder="Nguyễn Văn A"></div>
+              <div class="nhom-input"><label>Mã số sinh viên</label><input type="text" id="suaMSSV" placeholder="SV001"></div>
+            </div>
+            <div class="hang-form">
+              <div class="nhom-input"><label>Chuyên ngành</label><input type="text" id="suaNganh" placeholder="VD: Công nghệ thông tin"></div>
+              <div class="nhom-input"><label>Năm tốt nghiệp</label><input type="number" id="suaNamTN" placeholder="2024"></div>
+            </div>
+            <div class="hang-form">
+              <div class="nhom-input"><label>Công ty hiện tại</label><input type="text" id="suaCongTy" placeholder="Tên công ty"></div>
+              <div class="nhom-input"><label>Chức danh</label><input type="text" id="suaChucVu" placeholder="VD: Software Engineer"></div>
+            </div>
+            <div class="hang-form">
+              <div class="nhom-input"><label>Điện thoại</label><input type="text" id="suaDienThoai" placeholder="0912345678"></div>
+              <div class="nhom-input"><label>Link CV mặc định</label><input type="text" id="suaCV" placeholder="https://drive.google.com/cv.pdf"></div>
+            </div>
+            <div class="nhom-input"><label>Kỹ năng (cách nhau bằng dấu phẩy)</label><input type="text" id="suaKyNang" placeholder="React, Node.js, MongoDB..."></div>
+            <div class="nhom-input"><label>Giới thiệu bản thân</label><textarea id="suaGioiThieu" placeholder="Viết vài dòng giới thiệu về bạn..."></textarea></div>
+            <div class="nhom-input checkbox">
+              <input type="checkbox" id="suaMentor">
+              <label>🌟 Sẵn sàng làm Mentor hỗ trợ sinh viên</label>
+            </div>
+            <div class="nhom-nut">
+              <button class="btn btn-xanh" onclick="luuHoSo()">💾 Lưu Thay Đổi</button>
+              <button class="btn btn-xam" onclick="anFormSuaHoSo()">Hủy</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== QUẢN TRỊ ===== -->
+    <div id="quantri" class="trang">
+      <div class="tieu-de-trang">
+        <div><h2>⚙️ Bảng Điều Khiển Quản Trị</h2><p>Quản lý toàn bộ hệ thống AlumniNet</p></div>
+      </div>
+
+      <!-- Thống kê tổng quan -->
+      <div class="luoi-thongke" id="thongKeAdmin" style="margin-bottom:32px">
+        <div class="the-thongke"><div class="the-icon">👥</div><div class="the-so" id="qtTongNguoi">--</div><div class="the-nhan">Tổng người dùng</div></div>
+        <div class="the-thongke"><div class="the-icon">💼</div><div class="the-so" id="qtTongViec">--</div><div class="the-nhan">Tin tuyển dụng</div></div>
+        <div class="the-thongke pending"><div class="the-icon">⏳</div><div class="the-so" id="qtViecChoDuyet">--</div><div class="the-nhan">Tin chờ duyệt</div></div>
+        <div class="the-thongke pending"><div class="the-icon">📝</div><div class="the-so" id="qtBaiChoDuyet">--</div><div class="the-nhan">Bài viết chờ duyệt</div></div>
+      </div>
+
+      <!-- Tab điều hướng -->
+      <div class="tab-menu">
+        <button class="tab-btn active" onclick="chuyenTabAdmin('tin-tuyen-dung', this)">💼 Duyệt Tin Tuyển Dụng</button>
+        <button class="tab-btn" onclick="chuyenTabAdmin('bai-viet', this)">📝 Duyệt Bài Viết</button>
+        <button class="tab-btn" onclick="chuyenTabAdmin('bao-cao', this)">🚨 Báo Cáo Vi Phạm</button>
+        <button class="tab-btn" onclick="chuyenTabAdmin('nguoi-dung', this)">👥 Người Dùng</button>
+        <button class="tab-btn" onclick="chuyenTabAdmin('nhat-ky', this)">📋 Nhật Ký</button>
+      </div>
+
+      <!-- Tab: Tin chờ duyệt -->
+      <div id="qt-tin-tuyen-dung" class="tab-noi-dung active the-trang">
+        <div class="tieu-de-the">💼 Tin Tuyển Dụng Chờ Duyệt</div>
+        <div class="bang-cuon"><table>
+          <thead><tr><th>Tiêu đề</th><th>Người đăng</th><th>Hình thức</th><th>Địa điểm</th><th>Hạn ứng tuyển</th><th>Thao tác</th></tr></thead>
+          <tbody id="bangTinChoduyet"><tr><td colspan="6" class="o-trong">Đang tải...</td></tr></tbody>
+        </table></div>
+      </div>
+
+      <!-- Tab: Bài viết chờ duyệt -->
+      <div id="qt-bai-viet" class="tab-noi-dung the-trang">
+        <div class="tieu-de-the">📝 Bài Viết Chờ Duyệt</div>
+        <div class="bang-cuon"><table>
+          <thead><tr><th>Tiêu đề</th><th>Tác giả</th><th>Danh mục</th><th>Thời gian</th><th>Thao tác</th></tr></thead>
+          <tbody id="bangBaiChoduyet"><tr><td colspan="5" class="o-trong">Đang tải...</td></tr></tbody>
+        </table></div>
+      </div>
+
+      <!-- Tab: Báo cáo -->
+      <div id="qt-bao-cao" class="tab-noi-dung the-trang">
+        <div class="tieu-de-the">🚨 Báo Cáo Vi Phạm</div>
+        <div class="bang-cuon"><table>
+          <thead><tr><th>Người báo cáo</th><th>Loại</th><th>Lý do</th><th>Trạng thái</th><th>Thao tác</th></tr></thead>
+          <tbody id="bangBaoCao"><tr><td colspan="5" class="o-trong">Đang tải...</td></tr></tbody>
+        </table></div>
+      </div>
+
+      <!-- Tab: Người dùng -->
+      <div id="qt-nguoi-dung" class="tab-noi-dung the-trang">
+        <div class="tieu-de-the">👥 Quản Lý Người Dùng</div>
+        <div class="bang-cuon"><table>
+          <thead><tr><th>Email</th><th>Vai trò</th><th>Trạng thái</th><th>Ngày tạo</th><th>Thao tác</th></tr></thead>
+          <tbody id="bangNguoiDung"><tr><td colspan="5" class="o-trong">Đang tải...</td></tr></tbody>
+        </table></div>
+      </div>
+
+      <!-- Tab: Nhật ký -->
+      <div id="qt-nhat-ky" class="tab-noi-dung the-trang">
+        <div class="tieu-de-the">📋 Nhật Ký Thao Tác</div>
+        <div class="bang-cuon"><table>
+          <thead><tr><th>Người thực hiện</th><th>Hành động</th><th>Đối tượng</th><th>Thời gian</th></tr></thead>
+          <tbody id="bangNhatKy"><tr><td colspan="4" class="o-trong">Đang tải...</td></tr></tbody>
+        </table></div>
+      </div>
+    </div>
+
+  </div><!-- .container -->
+</div><!-- #ungDung -->
+
+<!-- Modal Ứng Tuyển -->
+<div class="modal-nen an" id="modalUngTuyen">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>📤 Nộp Hồ Sơ Ứng Tuyển</h3>
+      <button class="modal-dong" onclick="dongModalUngTuyen()">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="viecLamIdUngTuyen">
+      <div class="nhom-input"><label>Tiêu đề việc làm</label><div id="tenViecUngTuyen" style="font-weight:600;color:#00b14f;padding:8px 0"></div></div>
+      <div class="nhom-input"><label>Link CV của bạn *</label><input type="url" id="linkCVUngTuyen" placeholder="https://drive.google.com/file/cv-cua-ban.pdf"></div>
+      <div class="nhom-input"><label>Thư giới thiệu (tùy chọn)</label><textarea id="thuGioiThieuUngTuyen" placeholder="Viết vài dòng giới thiệu về bản thân và lý do bạn phù hợp với vị trí này..."></textarea></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-xam" onclick="dongModalUngTuyen()">Hủy</button>
+      <button class="btn btn-xanh" onclick="guiHoSoUngTuyen()">📤 Nộp Hồ Sơ</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Chi tiết việc làm -->
+<div class="modal-nen an" id="modalChiTietViec">
+  <div class="modal modal-lon">
+    <div class="modal-header">
+      <h3 id="tieuDeChiTiet">Chi Tiết Việc Làm</h3>
+      <button class="modal-dong" onclick="dongModalChiTiet()">✕</button>
+    </div>
+    <div class="modal-body" id="noiDungChiTiet"></div>
+    <div class="modal-footer">
+      <button class="btn btn-xam" onclick="dongModalChiTiet()">Đóng</button>
+      <button class="btn btn-xanh" id="btnUngTuyenChiTiet">📤 Ứng Tuyển Ngay</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast thông báo -->
+<div id="toast" class="toast">
+  <span id="toastIcon">✅</span>
+  <span id="toastText"></span>
+</div>
+
+<script src="/js/api.js"></script>
+<script src="/js/app.js"></script>
 </body>
 </html>

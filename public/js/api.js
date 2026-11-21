@@ -1,191 +1,75 @@
-// API Helper Functions
-const API_BASE = 'http://localhost:5000/api';
-
-let authToken = localStorage.getItem('token');
-
-// Helper function to make API calls
-async function apiCall(endpoint, method = 'GET', data = null) {
-  const options = {
-    method,
+// ===== HÀM GỌI API =====
+async function goiAPI(duongDan, phuongThuc = 'GET', duLieu = null) {
+  const token = localStorage.getItem('token');
+  const tuyChinh = {
+    method: phuongThuc,
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': authToken ? `Bearer ${authToken}` : ''
+      ...(token ? { 'Authorization': `Bearer ${token}` } : {})
     }
   };
-
-  if (data) {
-    options.body = JSON.stringify(data);
-  }
-
+  if (duLieu) tuyChinh.body = JSON.stringify(duLieu);
   try {
-    const response = await fetch(API_BASE + endpoint, options);
-    const result = await response.json();
-
-    if (!response.ok && response.status === 401) {
-      // Token expired or invalid
-      logout();
-      return null;
-    }
-
-    return result;
-  } catch (error) {
-    console.error('API Error:', error);
-    showAlert(`Error: ${error.message}`, 'error');
+    const res = await fetch('/api' + duongDan, tuyChinh);
+    return await res.json();
+  } catch (err) {
+    console.error('Lỗi API:', duongDan, err.message);
     return null;
   }
 }
 
-// Authentication APIs
-async function loginAPI(email, password) {
-  return await apiCall('/auth/login', 'POST', { email, password });
-}
+// ===== XÁC THỰC =====
+const dangNhapAPI = (email, matKhau) => goiAPI('/auth/login', 'POST', { email, password: matKhau });
+const dangKyAPI = (email, matKhau, hoTen, vaiTro) => goiAPI('/auth/register', 'POST', { email, password: matKhau, fullName: hoTen, role: vaiTro });
+const layThongTinToiAPI = () => goiAPI('/auth/me');
 
-async function registerAPI(email, password, fullName, role) {
-  return await apiCall('/auth/register', 'POST', { email, password, fullName, role });
-}
+// ===== NGƯỜI DÙNG =====
+const capNhatHoSoAPI = (dl) => goiAPI('/users/profile', 'PUT', dl);
+const layHoSoNguoiDungAPI = (id) => goiAPI(`/users/profile/${id}`);
+const capNhatTrangThaiMentorAPI = (tt) => goiAPI('/users/mentor-status', 'PUT', { isMentorAvailable: tt });
 
-async function getMeAPI() {
-  return await apiCall('/auth/me');
-}
+// ===== VIỆC LÀM =====
+const taoViecLamAPI = (dl) => goiAPI('/jobs', 'POST', dl);
+const layDanhSachViecAPI = (params = {}) => goiAPI(`/jobs?${new URLSearchParams(params)}`);
+const layChiTietViecAPI = (id) => goiAPI(`/jobs/${id}`);
+const capNhatViecLamAPI = (id, dl) => goiAPI(`/jobs/${id}`, 'PUT', dl);
+const dongViecLamAPI = (id) => goiAPI(`/jobs/${id}/close`, 'PUT', {});
 
-// User APIs
-async function updateProfileAPI(data) {
-  return await apiCall('/users/profile', 'PUT', data);
-}
+// ===== ỨNG TUYỂN =====
+const ungTuyenAPI = (dl) => goiAPI('/applications', 'POST', dl);
+const layHoSoCuaToiAPI = () => goiAPI('/applications/my-applications');
+const capNhatTrangThaiHoSoAPI = (id, tt) => goiAPI(`/applications/${id}/status`, 'PUT', { status: tt });
+const rutHoSoAPI = (id) => goiAPI(`/applications/${id}/withdraw`, 'PUT', {});
 
-async function getProfileAPI(userId) {
-  return await apiCall(`/users/profile/${userId}`);
-}
+// ===== BÀI VIẾT =====
+const taoBaiVietAPI = (dl) => goiAPI('/posts', 'POST', dl);
+const layDanhSachBaiAPI = (params = {}) => goiAPI(`/posts?${new URLSearchParams(params)}`);
+const capNhatBaiVietAPI = (id, dl) => goiAPI(`/posts/${id}`, 'PUT', dl);
+const taoBinhLuanAPI = (postId, nd) => goiAPI(`/posts/${postId}/comments`, 'POST', { content: nd });
+const thichBaiAPI = (postId) => goiAPI(`/posts/${postId}/like`, 'POST', {});
 
-async function getAlumniListAPI(params = {}) {
-  const query = new URLSearchParams(params).toString();
-  return await apiCall(`/users/alumni?${query}`);
-}
+// ===== MENTOR =====
+const layDanhSachMentorAPI = (params = {}) => goiAPI(`/mentors?${new URLSearchParams(params)}`);
+const guiYeuCauMentorAPI = (dl) => goiAPI('/mentors/request', 'POST', dl);
+const layYeuCauNhanDuocAPI = () => goiAPI('/mentors/received-requests');
+const layYeuCauDaGuiAPI = () => goiAPI('/mentors/sent-requests');
+const phanHoiYeuCauMentorAPI = (id, tt) => goiAPI(`/mentors/request/${id}/respond`, 'PUT', { status: tt });
 
-async function updateMentorStatusAPI(isMentorAvailable) {
-  return await apiCall('/users/mentor-status', 'PUT', { isMentorAvailable });
-}
+// ===== BÁO CÁO =====
+const taoBaoCaoAPI = (loai, id, lydo) => goiAPI('/reports', 'POST', { targetType: loai, targetId: id, reason: lydo });
+const layBaoCaoAPI = () => goiAPI('/admin/reports');
 
-// Job APIs
-async function createJobAPI(jobData) {
-  return await apiCall('/jobs', 'POST', jobData);
-}
+// ===== THÔNG BÁO =====
+const layThongBaoAPI = () => goiAPI('/notifications');
 
-async function getJobsAPI(params = {}) {
-  const query = new URLSearchParams(params).toString();
-  return await apiCall(`/jobs?${query}`);
-}
-
-async function getJobDetailAPI(jobId) {
-  return await apiCall(`/jobs/${jobId}`);
-}
-
-async function updateJobAPI(jobId, data) {
-  return await apiCall(`/jobs/${jobId}`, 'PUT', data);
-}
-
-async function closeJobAPI(jobId) {
-  return await apiCall(`/jobs/${jobId}/close`, 'PUT', {});
-}
-
-// Application APIs
-async function applyJobAPI(applicationData) {
-  return await apiCall('/applications', 'POST', applicationData);
-}
-
-async function getMyApplicationsAPI() {
-  return await apiCall('/applications/my-applications');
-}
-
-async function getJobApplicationsAPI(jobId) {
-  return await apiCall(`/applications/job/${jobId}`);
-}
-
-async function updateApplicationStatusAPI(appId, status) {
-  return await apiCall(`/applications/${appId}/status`, 'PUT', { status });
-}
-
-async function withdrawApplicationAPI(appId) {
-  return await apiCall(`/applications/${appId}/withdraw`, 'PUT', {});
-}
-
-// Post APIs
-async function createPostAPI(postData) {
-  return await apiCall('/posts', 'POST', postData);
-}
-
-async function getPostsAPI(params = {}) {
-  const query = new URLSearchParams(params).toString();
-  return await apiCall(`/posts?${query}`);
-}
-
-async function getPostDetailAPI(postId) {
-  return await apiCall(`/posts/${postId}`);
-}
-
-async function updatePostAPI(postId, data) {
-  return await apiCall(`/posts/${postId}`, 'PUT', data);
-}
-
-async function createCommentAPI(postId, content) {
-  return await apiCall(`/posts/${postId}/comments`, 'POST', { content });
-}
-
-async function likePostAPI(postId) {
-  return await apiCall(`/posts/${postId}/like`, 'POST', {});
-}
-
-// Mentor APIs
-async function getMentorsAPI(params = {}) {
-  const query = new URLSearchParams(params).toString();
-  return await apiCall(`/mentors?${query}`);
-}
-
-async function sendMentorRequestAPI(mentorData) {
-  return await apiCall('/mentors/request', 'POST', mentorData);
-}
-
-async function getReceivedMentorRequestsAPI() {
-  return await apiCall('/mentors/received-requests');
-}
-
-async function getSentMentorRequestsAPI() {
-  return await apiCall('/mentors/sent-requests');
-}
-
-async function respondMentorRequestAPI(requestId, status) {
-  return await apiCall(`/mentors/request/${requestId}/respond`, 'PUT', { status });
-}
-
-// Admin APIs
-async function approveJobAPI(jobId, status, rejectionReason) {
-  return await apiCall(`/admin/jobs/${jobId}/approve`, 'PUT', { status, rejectionReason });
-}
-
-async function approvePostAPI(postId, status) {
-  return await apiCall(`/admin/posts/${postId}/approve`, 'PUT', { status });
-}
-
-async function verifyRecruiterAPI(recruiterId, isVerified) {
-  return await apiCall(`/admin/recruiters/${recruiterId}/verify`, 'PUT', { isVerified });
-}
-
-async function lockUserAPI(userId, accountStatus) {
-  return await apiCall(`/admin/users/${userId}/lock`, 'PUT', { accountStatus });
-}
-
-async function resolveReportAPI(reportId, status, resolutionNote) {
-  return await apiCall(`/admin/reports/${reportId}/resolve`, 'PUT', { status, resolutionNote });
-}
-
-async function getReportsAPI() {
-  return await apiCall('/admin/reports');
-}
-
-async function getAuditLogsAPI() {
-  return await apiCall('/admin/audit-logs');
-}
-
-async function getStatisticsAPI() {
-  return await apiCall('/admin/statistics');
-}
+// ===== QUẢN TRỊ =====
+const duyetViecAPI = (id, tt, lydo) => goiAPI(`/admin/jobs/${id}/approve`, 'PUT', { status: tt, rejectionReason: lydo });
+const duyetBaiAPI = (id, tt) => goiAPI(`/admin/posts/${id}/approve`, 'PUT', { status: tt });
+const xacThucRecruiterAPI = (id, xacThuc) => goiAPI(`/admin/recruiters/${id}/verify`, 'PUT', { isVerified: xacThuc });
+const khoaTaiKhoanAPI = (id, tt) => goiAPI(`/admin/users/${id}/lock`, 'PUT', { accountStatus: tt });
+const xulyBaoCaoAPI = (id, tt, ghiChu) => goiAPI(`/admin/reports/${id}/resolve`, 'PUT', { status: tt, resolutionNote: ghiChu });
+const layThongKeAPI = () => goiAPI('/admin/statistics');
+const layNhatKyAPI = () => goiAPI('/admin/audit-logs');
+const layTinChoDuyetAPI = () => goiAPI('/admin/jobs/pending');
+const layBaiChoDuyetAPI = () => goiAPI('/admin/posts/pending');
+const layNguoiDungAdminAPI = () => goiAPI('/admin/users');

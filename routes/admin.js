@@ -220,10 +220,47 @@ router.get('/reports', authenticate, isAdmin, async (req, res) => {
     const reports = await Report.find({ status: 'Open' })
       .populate('reporterId', 'email')
       .sort({ createdAt: -1 });
-
     res.json(reports);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching reports', error: error.message });
+  }
+});
+
+// Lấy danh sách jobs chờ duyệt
+router.get('/jobs/pending', authenticate, isAdmin, async (req, res) => {
+  try {
+    const jobs = await JobPosting.find({ status: 'Pending' })
+      .populate('creatorId', 'email')
+      .sort({ createdAt: -1 });
+    res.json(jobs);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching pending jobs', error: error.message });
+  }
+});
+
+// Lấy danh sách posts chờ duyệt
+router.get('/posts/pending', authenticate, isAdmin, async (req, res) => {
+  try {
+    const Post = require('../models/Post');
+    const posts = await Post.find({ status: 'Pending' })
+      .populate('authorId', 'email')
+      .sort({ createdAt: -1 });
+    res.json(posts);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching pending posts', error: error.message });
+  }
+});
+
+// Lấy danh sách tất cả users
+router.get('/users', authenticate, isAdmin, async (req, res) => {
+  try {
+    const users = await User.find()
+      .populate('roles', 'roleName')
+      .sort({ createdAt: -1 })
+      .limit(100);
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching users', error: error.message });
   }
 });
 

@@ -4,7 +4,6 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const path = require('path');
 
-// Load environment variables
 dotenv.config();
 
 const app = express();
@@ -15,12 +14,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Connect to MongoDB
+// Kết nối MongoDB
 mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log('✅ MongoDB connected'))
-  .catch(err => console.error('❌ MongoDB connection error:', err));
+  .then(() => console.log('✅ Kết nối MongoDB thành công'))
+  .catch(err => console.error('❌ Lỗi kết nối MongoDB:', err));
 
-// Routes
+// Các routes
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/users', require('./routes/users'));
 app.use('/api/jobs', require('./routes/jobs'));
@@ -28,22 +27,27 @@ app.use('/api/applications', require('./routes/applications'));
 app.use('/api/posts', require('./routes/posts'));
 app.use('/api/mentors', require('./routes/mentors'));
 app.use('/api/admin', require('./routes/admin'));
+app.use('/api/reports', require('./routes/reports'));
+app.use('/api/notifications', require('./routes/notifications'));
 
-// Basic route
-app.get('/', (req, res) => {
+// Trả về frontend cho tất cả các route không phải API
+app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Error handling middleware
+// Xử lý lỗi chung
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(err.status || 500).json({
-    message: err.message || 'Internal Server Error',
-    status: err.status || 500
+    message: err.message || 'Lỗi máy chủ nội bộ'
   });
 });
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
+  console.log('');
+  console.log('🚀 ================================');
+  console.log(`🌐 Server: http://localhost:${PORT}`);
+  console.log('🎓 AlumniNet - Hệ thống kết nối cựu sinh viên');
+  console.log('================================');
 });
