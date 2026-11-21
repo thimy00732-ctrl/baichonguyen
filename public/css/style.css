@@ -11,7 +11,14 @@
   --bong-lon:0 8px 32px rgba(26,115,232,.18);
   --r:12px; --r-nho:8px;
 }
-body { font-family:'Inter',sans-serif; background:var(--xam-1); color:var(--xam-7); font-size:14px; line-height:1.6; }
+body {
+  font-family:'Inter',sans-serif;
+  background: var(--xam-1);
+  background-image:
+    radial-gradient(circle at 20% 50%, rgba(26,115,232,0.04) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(74,158,255,0.05) 0%, transparent 50%);
+  color:var(--xam-7); font-size:14px; line-height:1.6;
+}
 .container { max-width:1240px; margin:0 auto; padding:0 24px; }
 .an { display:none !important; }
 .trang { display:none; }
@@ -19,9 +26,20 @@ body { font-family:'Inter',sans-serif; background:var(--xam-1); color:var(--xam-
 .noi-dung-chinh { padding:32px 0; min-height:calc(100vh - 70px); }
 
 /* ===== AUTH ===== */
-.auth-wrapper { min-height:100vh; background:linear-gradient(135deg,#1a73e8,#0d47a1); display:flex; align-items:center; justify-content:center; padding:40px 20px; }
+.auth-wrapper {
+  min-height:100vh;
+  background:
+    linear-gradient(135deg, rgba(26,115,232,0.92), rgba(13,71,161,0.95)),
+    url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1400&q=80') center/cover no-repeat;
+  display:flex; align-items:center; justify-content:center; padding:40px 20px;
+}
 .auth-card { background:var(--trang); border-radius:20px; box-shadow:var(--bong-lon); overflow:hidden; width:100%; max-width:920px; display:grid; grid-template-columns:1fr 1fr; min-height:580px; }
-.auth-trai { background:linear-gradient(160deg,#1a73e8,#0d47a1); padding:56px 44px; display:flex; flex-direction:column; justify-content:center; color:#fff; }
+.auth-trai {
+  background:
+    linear-gradient(160deg, rgba(26,115,232,0.88), rgba(13,71,161,0.95)),
+    url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&q=80') center/cover no-repeat;
+  padding:56px 44px; display:flex; flex-direction:column; justify-content:center; color:#fff;
+}
 .auth-brand { display:flex; align-items:center; gap:12px; margin-bottom:40px; }
 .auth-logo { font-size:32px; }
 .auth-tensite { font-size:26px; font-weight:700; }
@@ -84,7 +102,12 @@ body { font-family:'Inter',sans-serif; background:var(--xam-1); color:var(--xam-
 .btn-lon { padding:14px 32px; font-size:16px; }
 
 /* ===== HERO ===== */
-.hero-block { background:linear-gradient(135deg,#1a73e8 0%,#0d47a1 60%,#1557b0 100%); color:#fff; padding:72px 48px; margin:-32px -24px 48px; position:relative; overflow:hidden; }
+.hero-block {
+  background:
+    linear-gradient(135deg, rgba(26,115,232,0.88) 0%, rgba(13,71,161,0.93) 60%, rgba(21,87,176,0.95) 100%),
+    url('https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=1600&q=80') center/cover no-repeat;
+  color:#fff; padding:72px 48px; margin:-32px -24px 48px; position:relative; overflow:hidden;
+}
 .hero-block::before { content:''; position:absolute; inset:0; background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); }
 .hero-noi-dung { position:relative; z-index:1; max-width:720px; }
 .hero-block h1 { font-size:42px; font-weight:700; margin-bottom:16px; line-height:1.3; }
@@ -435,7 +458,13 @@ table tr:last-child td { border-bottom:none; }
 .the-mentor-hinh { margin-bottom:12px; }
 
 /* Trang chá»§ section banner */
-.section-banner { background:linear-gradient(135deg,#e8f0fe,#dbeafe); border-radius:16px; padding:40px; margin:40px 0; display:flex; align-items:center; gap:40px; overflow:hidden; position:relative; }
+.section-banner {
+  background:
+    linear-gradient(135deg, rgba(232,240,254,0.97), rgba(219,234,254,0.97)),
+    url('https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=1200&q=80') center/cover no-repeat;
+  border-radius:16px; padding:40px; margin:40px 0; display:flex; align-items:center; gap:40px; overflow:hidden; position:relative;
+  border:1px solid rgba(26,115,232,0.15);
+}
 .section-banner-nd { flex:1; }
 .section-banner-nd h2 { font-size:24px; font-weight:700; color:var(--xam-dam); margin-bottom:10px; }
 .section-banner-nd p { color:var(--xam-5); line-height:1.75; margin-bottom:20px; }
@@ -466,7 +495,7 @@ table tr:last-child td { border-bottom:none; }
 .the-viec.noi-bat::before { content:'ðŸ”¥ Ná»•i báº­t'; position:absolute; top:16px; right:16px; background:linear-gradient(135deg,#ff6b35,#f7c59f); color:#fff; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:600; }
 .the-viec { position:relative; }
 
-/* ===== BÌNH LU?N INLINE ===== */
+/* ===== Bï¿½NH LU?N INLINE ===== */
 .khung-binhluan {
   margin-top: 16px;
   border-top: 1px solid var(--xam-1);
@@ -478,7 +507,7 @@ table tr:last-child td { border-bottom:none; }
   to   { opacity:1; transform:translateY(0); }
 }
 
-/* Danh sách bình lu?n */
+/* Danh sï¿½ch bï¿½nh lu?n */
 .ds-binhluan {
   max-height: 280px;
   overflow-y: auto;
@@ -492,7 +521,7 @@ table tr:last-child td { border-bottom:none; }
 .ds-binhluan::-webkit-scrollbar-track { background: var(--xam-1); border-radius: 4px; }
 .ds-binhluan::-webkit-scrollbar-thumb { background: var(--xam-3); border-radius: 4px; }
 
-/* M?i bình lu?n */
+/* M?i bï¿½nh lu?n */
 .muc-binhluan {
   display: flex;
   gap: 10px;
@@ -534,7 +563,7 @@ table tr:last-child td { border-bottom:none; }
   margin-top: 5px;
 }
 
-/* Form nh?p bình lu?n */
+/* Form nh?p bï¿½nh lu?n */
 .form-binhluan {
   display: flex;
   gap: 10px;
@@ -580,8 +609,139 @@ table tr:last-child td { border-bottom:none; }
 }
 .btn-gui-bl:hover { background: var(--xanh-dam); }
 
-/* Nút thích dã thích */
+/* Nï¿½t thï¿½ch dï¿½ thï¿½ch */
 .nut-tuongtac.da-thich {
   color: #e74c3c;
   background: #fdecea;
+}
+
+/* ===== HÌNH N?N CÁC SECTION ===== */
+
+/* Banner tính nang có hình n?n nh? */
+.banner-tinh-nang {
+  background-image: radial-gradient(circle at 10% 50%, rgba(26,115,232,0.03) 0%, transparent 60%);
+}
+
+/* Th? th?ng kê trang ch? */
+.luoi-thongke::before {
+  content: '';
+  display: none;
+}
+
+/* Admin stats header */
+#thongKeAdmin {
+  background-image: linear-gradient(135deg, rgba(26,115,232,0.03), transparent);
+  border-radius: var(--r);
+  padding: 4px;
+}
+
+/* Trang vi?c làm - header banner */
+.banner-viec-lam {
+  background:
+    linear-gradient(135deg, rgba(26,115,232,0.92), rgba(13,71,161,0.9)),
+    url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1200&q=80') center/cover no-repeat;
+  border-radius: 16px;
+  padding: 40px 48px;
+  color: white;
+  margin-bottom: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+.banner-viec-lam h2 { font-size:26px; font-weight:700; margin-bottom:8px; }
+.banner-viec-lam p { opacity:.9; font-size:15px; }
+
+/* Trang c?ng d?ng - header banner */
+.banner-cong-dong {
+  background:
+    linear-gradient(135deg, rgba(52,152,219,0.9), rgba(26,115,232,0.92)),
+    url('https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=1200&q=80') center/cover no-repeat;
+  border-radius: 16px;
+  padding: 40px 48px;
+  color: white;
+  margin-bottom: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+.banner-cong-dong h2 { font-size:26px; font-weight:700; margin-bottom:8px; }
+.banner-cong-dong p { opacity:.9; font-size:15px; }
+
+/* Trang mentor - header banner */
+.banner-mentor {
+  background:
+    linear-gradient(135deg, rgba(13,71,161,0.9), rgba(26,115,232,0.88)),
+    url('https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=1200&q=80') center/cover no-repeat;
+  border-radius: 16px;
+  padding: 40px 48px;
+  color: white;
+  margin-bottom: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+.banner-mentor h2 { font-size:26px; font-weight:700; margin-bottom:8px; }
+.banner-mentor p { opacity:.9; font-size:15px; }
+
+/* H? so - header banner */
+.banner-hoso {
+  background:
+    linear-gradient(135deg, rgba(26,115,232,0.88), rgba(21,87,176,0.9)),
+    url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1200&q=80') center/cover no-repeat;
+  border-radius: 16px;
+  padding: 36px 48px;
+  color: white;
+  margin-bottom: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+.banner-hoso h2 { font-size:24px; font-weight:700; margin-bottom:6px; }
+.banner-hoso p { opacity:.88; font-size:14px; }
+
+/* Ph?n text trong banner */
+.banner-nd { flex: 1; }
+.banner-nut { flex-shrink: 0; }
+
+/* Nút tr?ng dùng trên banner có n?n màu */
+.btn-trang {
+  background: white;
+  color: var(--xanh);
+  border: none;
+  padding: 11px 24px;
+  border-radius: var(--r-nho);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn-trang:hover {
+  background: rgba(255,255,255,0.9);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+.btn-trang-vien {
+  background: transparent;
+  color: white;
+  border: 2px solid rgba(255,255,255,0.7);
+  padding: 10px 22px;
+  border-radius: var(--r-nho);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn-trang-vien:hover {
+  background: rgba(255,255,255,0.15);
+  border-color: white;
 }
