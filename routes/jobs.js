@@ -44,10 +44,12 @@ router.post('/', authenticate, async (req, res) => {
   }
 });
 
-// Lấy danh sách tin tuyển dụng đã duyệt
+// Lấy danh sách tin tuyển dụng đã duyệt (với pagination)
 router.get('/', authenticate, async (req, res) => {
   try {
-    const { jobType, location, search } = req.query;
+    const { jobType, location, search, page = 1, limit = 10 } = req.query;
+    const skip = (page - 1) * limit;
+    
     let query = { status: 'Approved' };
 
     if (jobType) query.jobType = jobType;
@@ -55,15 +57,26 @@ router.get('/', authenticate, async (req, res) => {
     if (search) {
       query.$or = [
         { title: { $regex: search, $options: 'i' } },
-        { description: { $regex: search, $options: 'i' } }
+        { description: { $regex: search, $options: 'i' } },
+        { requirements: { $regex: search, $options: 'i' } }
       ];
     }
 
     const jobs = await JobPosting.find(query)
       .populate('creatorId', 'email')
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .limit(parseInt(limit))
+      .skip(skip);
 
-    res.json(jobs);
+    const total = await JobPosting.countDocuments(query);
+
+    res.json({
+      jobs,
+      total,
+      page: parseInt(page),
+      totalPages: Math.ceil(total / limit),
+      hasMore: skip + jobs.length < total
+    });
   } catch (error) {
     res.status(500).json({ message: 'Error fetching jobs', error: error.message });
   }

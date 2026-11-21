@@ -432,6 +432,23 @@ table tr:last-child td { border-bottom:none; }
   .viec-dau{flex-direction:column;}
 }
 
+/* ===== PAGINATION ===== */
+.phan-trang {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 32px;
+  padding: 24px;
+  background: var(--xam-1);
+  border-radius: var(--r);
+}
+.thongtin-trang {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--xam-7);
+}
+
 /* ===== HÌNH ẢNH MINH HOẠ ===== */
 .hero-hinh { position:absolute; right:40px; top:50%; transform:translateY(-50%); opacity:.18; pointer-events:none; }
 @media(max-width:900px){.hero-hinh{display:none;}}

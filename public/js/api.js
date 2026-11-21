@@ -74,3 +74,10 @@ const layNhatKyAPI = () => goiAPI('/admin/audit-logs');
 const layTinChoDuyetAPI = () => goiAPI('/admin/jobs/pending');
 const layBaiChoDuyetAPI = () => goiAPI('/admin/posts/pending');
 const layNguoiDungAdminAPI = () => goiAPI('/admin/users');
+
+// ===== RECRUITER PROFILE =====
+const taoRecruiterProfileAPI = (dl) => goiAPI('/recruiter-profile', 'POST', dl);
+const layRecruiterProfileToiAPI = () => goiAPI('/recruiter-profile/me');
+const layRecruiterProfileAPI = (id) => goiAPI(`/recruiter-profile/${id}`);
+const capNhatRecruiterProfileAPI = (dl) => goiAPI('/recruiter-profile', 'POST', dl);
+const xoaRecruiterProfileAPI = () => goiAPI('/recruiter-profile/me', 'DELETE', {});

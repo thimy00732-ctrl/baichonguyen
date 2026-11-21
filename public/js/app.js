@@ -2,6 +2,13 @@
 let nguoiDungHienTai = null;
 let viecDangXem = null;
 
+// Pagination state
+let paginationState = {
+  viec: { page: 1, limit: 10, hasMore: true },
+  bai: { page: 1, limit: 10, hasMore: true },
+  mentor: { page: 1, limit: 12, hasMore: true }
+};
+
 // ===== DEBOUNCE (trì hoãn gọi API khi gõ) =====
 let _debounceViec = null;
 let _debounceBai = null;
@@ -248,12 +255,16 @@ async function taiDanhSachViec() {
   const container = document.getElementById('danhSachViec');
   container.innerHTML = '<div class="dang-tai"><div class="vong-quay"></div> Đang tải danh sách việc làm...</div>';
 
-  const params = {};
+  const params = {
+    page: paginationState.viec.page,
+    limit: paginationState.viec.limit
+  };
   if (tim) params.search = tim;
   if (loai) params.jobType = loai;
   if (diaDiem) params.location = diaDiem;
 
-  const ds = await layDanhSachViecAPI(params);
+  const kq = await layDanhSachViecAPI(params);
+  const ds = kq?.jobs || kq || [];
 
   if (!ds || ds.length === 0) {
     hienKetQuaViec(0);
@@ -272,8 +283,26 @@ async function taiDanhSachViec() {
     return;
   }
 
-  hienKetQuaViec(ds.length);
-  container.innerHTML = ds.map(taoTheViec).join('');
+  hienKetQuaViec(kq.total || ds.length);
+  const html = ds.map(taoTheViec).join('');
+  
+  // Thêm pagination controls nếu có
+  let paginationHtml = '';
+  if (kq.totalPages > 1) {
+    paginationHtml = `<div class="phan-trang">
+      ${kq.page > 1 ? `<button class="btn btn-xam" onclick="chuyenTrangViec(${kq.page - 1})">← Trang trước</button>` : ''}
+      <span class="thongtin-trang">Trang ${kq.page} / ${kq.totalPages}</span>
+      ${kq.hasMore ? `<button class="btn btn-xam" onclick="chuyenTrangViec(${kq.page + 1})">Trang sau →</button>` : ''}
+    </div>`;
+  }
+  
+  container.innerHTML = html + paginationHtml;
+}
+
+function chuyenTrangViec(page) {
+  paginationState.viec.page = page;
+  taiDanhSachViec();
+  document.getElementById('danhSachViec').scrollIntoView({ behavior: 'smooth' });
 }
 
 async function taiViecLamTrangChu() {

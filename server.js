@@ -29,6 +29,7 @@ app.use('/api/mentors', require('./routes/mentors'));
 app.use('/api/admin', require('./routes/admin'));
 app.use('/api/reports', require('./routes/reports'));
 app.use('/api/notifications', require('./routes/notifications'));
+app.use('/api/recruiter-profile', require('./routes/recruiterProfile'));
 
 // Trả về frontend cho tất cả các route không phải API
 app.get('*', (req, res) => {

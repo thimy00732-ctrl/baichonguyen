@@ -31,10 +31,12 @@ router.post('/', authenticate, async (req, res) => {
   }
 });
 
-// Lấy danh sách bài viết đã duyệt
+// Lấy danh sách bài viết đã duyệt (với pagination)
 router.get('/', authenticate, async (req, res) => {
   try {
-    const { category, search } = req.query;
+    const { category, search, page = 1, limit = 10 } = req.query;
+    const skip = (page - 1) * limit;
+    
     let query = { status: 'Approved' };
 
     if (category) query.category = category;
@@ -47,9 +49,19 @@ router.get('/', authenticate, async (req, res) => {
 
     const posts = await Post.find(query)
       .populate('authorId', 'email')
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .limit(parseInt(limit))
+      .skip(skip);
 
-    res.json(posts);
+    const total = await Post.countDocuments(query);
+
+    res.json({
+      posts,
+      total,
+      page: parseInt(page),
+      totalPages: Math.ceil(total / limit),
+      hasMore: skip + posts.length < total
+    });
   } catch (error) {
     res.status(500).json({ message: 'Error fetching posts', error: error.message });
   }
