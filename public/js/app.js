@@ -2,6 +2,72 @@
 let nguoiDungHienTai = null;
 let viecDangXem = null;
 
+// ===== DEBOUNCE (trì hoãn gọi API khi gõ) =====
+let _debounceViec = null;
+let _debounceBai = null;
+let _debounceMentor = null;
+
+function debounceTimKiemViec() {
+  clearTimeout(_debounceViec);
+  _debounceViec = setTimeout(() => taiDanhSachViec(), 500);
+}
+function debounceTimKiemBai() {
+  clearTimeout(_debounceBai);
+  _debounceBai = setTimeout(() => taiDanhSachBai(), 500);
+}
+function debounceTimKiemMentor() {
+  clearTimeout(_debounceMentor);
+  _debounceMentor = setTimeout(() => taiDanhSachMentor(), 500);
+}
+
+// Xóa bộ lọc
+function xoaTimKiemViec() {
+  document.getElementById('timKiemViec').value = '';
+  document.getElementById('loaiViecLoc').value = '';
+  document.getElementById('diaDiemViecLoc').value = '';
+  const kq = document.getElementById('ketQuaViec');
+  if (kq) kq.style.display = 'none';
+  taiDanhSachViec();
+}
+function xoaTimKiemBai() {
+  document.getElementById('timKiemBai').value = '';
+  document.getElementById('danhMucBaiLoc').value = '';
+  const kq = document.getElementById('ketQuaBai');
+  if (kq) kq.style.display = 'none';
+  taiDanhSachBai();
+}
+function xoaTimKiemMentor() {
+  document.getElementById('timKiemMentor').value = '';
+  document.getElementById('chuyenNganhMentor').value = '';
+  document.getElementById('kyNangMentor').value = '';
+  const kq = document.getElementById('ketQuaMentor');
+  if (kq) kq.style.display = 'none';
+  taiDanhSachMentor();
+}
+
+// Hiển thị kết quả tìm kiếm
+function hienKetQuaViec(soLuong) {
+  const kq = document.getElementById('ketQuaViec');
+  const so = document.getElementById('soKetQuaViec');
+  if (!kq || !so) return;
+  so.textContent = soLuong;
+  kq.style.display = soLuong >= 0 ? 'flex' : 'none';
+}
+function hienKetQuaBai(soLuong) {
+  const kq = document.getElementById('ketQuaBai');
+  const so = document.getElementById('soKetQuaBai');
+  if (!kq || !so) return;
+  so.textContent = soLuong;
+  kq.style.display = soLuong >= 0 ? 'flex' : 'none';
+}
+function hienKetQuaMentor(soLuong) {
+  const kq = document.getElementById('ketQuaMentor');
+  const so = document.getElementById('soKetQuaMentor');
+  if (!kq || !so) return;
+  so.textContent = soLuong;
+  kq.style.display = soLuong >= 0 ? 'flex' : 'none';
+}
+
 // ===== KHỞI TẠO =====
 document.addEventListener('DOMContentLoaded', () => {
   const token = localStorage.getItem('token');
@@ -174,13 +240,37 @@ function taoTheViec(viec) {
 }
 
 async function taiDanhSachViec() {
-  const tim = document.getElementById('timKiemViec')?.value||'';
-  const loai = document.getElementById('loaiViecLoc')?.value||'';
-  const diaDiem = document.getElementById('diaDiemViecLoc')?.value||'';
+  const tim = document.getElementById('timKiemViec')?.value.trim() || '';
+  const loai = document.getElementById('loaiViecLoc')?.value || '';
+  const diaDiem = document.getElementById('diaDiemViecLoc')?.value.trim() || '';
   const container = document.getElementById('danhSachViec');
   container.innerHTML = '<div class="dang-tai"><div class="vong-quay"></div> Đang tải danh sách việc làm...</div>';
-  const ds = await layDanhSachViecAPI({search:tim, jobType:loai, location:diaDiem});
-  if (!ds || ds.length===0) { container.innerHTML='<div class="rong"><div class="rong-icon">💼</div><h3>Chưa có việc làm phù hợp</h3><p>Thử thay đổi bộ lọc hoặc từ khóa tìm kiếm</p></div>'; return; }
+
+  const params = {};
+  if (tim) params.search = tim;
+  if (loai) params.jobType = loai;
+  if (diaDiem) params.location = diaDiem;
+
+  const ds = await layDanhSachViecAPI(params);
+
+  if (!ds || ds.length === 0) {
+    hienKetQuaViec(0);
+    container.innerHTML = `<div class="rong">
+      <div class="rong-hinh"><svg viewBox="0 0 140 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="20" y="25" width="100" height="70" rx="10" fill="#e8f0fe"/>
+        <rect x="30" y="38" width="60" height="8" rx="4" fill="#1a73e8" opacity=".3"/>
+        <rect x="30" y="52" width="80" height="6" rx="3" fill="#1a73e8" opacity=".2"/>
+        <rect x="30" y="64" width="50" height="6" rx="3" fill="#1a73e8" opacity=".15"/>
+        <circle cx="105" cy="40" r="16" fill="#fff" stroke="#e8f0fe" stroke-width="2"/>
+        <text x="105" y="45" text-anchor="middle" font-size="14">🔍</text>
+      </svg></div>
+      <h3>Không tìm thấy việc làm phù hợp</h3>
+      <p>Thử thay đổi từ khóa hoặc xóa bộ lọc</p>
+    </div>`;
+    return;
+  }
+
+  hienKetQuaViec(ds.length);
   container.innerHTML = ds.map(taoTheViec).join('');
 }
 
@@ -298,12 +388,37 @@ function taoTheBai(bai) {
 }
 
 async function taiDanhSachBai() {
-  const tim = document.getElementById('timKiemBai')?.value||'';
-  const dm = document.getElementById('danhMucBaiLoc')?.value||'';
+  const tim = document.getElementById('timKiemBai')?.value.trim() || '';
+  const dm = document.getElementById('danhMucBaiLoc')?.value || '';
   const container = document.getElementById('danhSachBai');
   container.innerHTML = '<div class="dang-tai"><div class="vong-quay"></div> Đang tải bài viết...</div>';
-  const ds = await layDanhSachBaiAPI({search:tim, category:dm});
-  if (!ds || ds.length===0) { container.innerHTML='<div class="rong"><div class="rong-icon">💬</div><h3>Chưa có bài viết</h3><p>Hãy là người đầu tiên chia sẻ trong cộng đồng!</p></div>'; return; }
+
+  const params = {};
+  if (tim) params.search = tim;
+  if (dm) params.category = dm;
+
+  const ds = await layDanhSachBaiAPI(params);
+
+  if (!ds || ds.length === 0) {
+    hienKetQuaBai(0);
+    container.innerHTML = `<div class="rong">
+      <div class="rong-hinh"><svg viewBox="0 0 140 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="15" y="15" width="110" height="90" rx="12" fill="#e8f0fe"/>
+        <circle cx="40" cy="42" r="14" fill="#1a73e8" opacity=".25"/>
+        <text x="40" y="47" text-anchor="middle" font-size="13">👤</text>
+        <rect x="60" y="34" width="55" height="6" rx="3" fill="#1a73e8" opacity=".3"/>
+        <rect x="60" y="45" width="40" height="5" rx="2.5" fill="#1a73e8" opacity=".2"/>
+        <rect x="20" y="66" width="100" height="6" rx="3" fill="#1a73e8" opacity=".15"/>
+        <rect x="20" y="77" width="80" height="6" rx="3" fill="#1a73e8" opacity=".12"/>
+        <rect x="20" y="88" width="90" height="6" rx="3" fill="#1a73e8" opacity=".1"/>
+      </svg></div>
+      <h3>Không tìm thấy bài viết</h3>
+      <p>Thử thay đổi từ khóa hoặc danh mục</p>
+    </div>`;
+    return;
+  }
+
+  hienKetQuaBai(ds.length);
   container.innerHTML = ds.map(taoTheBai).join('');
 }
 
@@ -369,13 +484,38 @@ function taoTheMentor(mentor) {
 }
 
 async function taiDanhSachMentor() {
-  const tim = document.getElementById('timKiemMentor')?.value||'';
-  const nganh = document.getElementById('chuyenNganhMentor')?.value||'';
-  const kynang = document.getElementById('kyNangMentor')?.value||'';
+  const tim = document.getElementById('timKiemMentor')?.value.trim() || '';
+  const nganh = document.getElementById('chuyenNganhMentor')?.value.trim() || '';
+  const kynang = document.getElementById('kyNangMentor')?.value.trim() || '';
   const container = document.getElementById('danhSachMentor');
   container.innerHTML = '<div class="dang-tai"><div class="vong-quay"></div> Đang tải danh sách mentor...</div>';
-  const ds = await layDanhSachMentorAPI({search:tim, major:nganh, skills:kynang});
-  if (!ds || ds.length===0) { container.innerHTML='<div class="rong"><div class="rong-icon">🤝</div><h3>Chưa có mentor</h3><p>Thử thay đổi bộ lọc hoặc từ khóa tìm kiếm</p></div>'; return; }
+
+  const params = {};
+  if (tim) params.search = tim;
+  if (nganh) params.major = nganh;
+  if (kynang) params.skills = kynang;
+
+  const ds = await layDanhSachMentorAPI(params);
+
+  if (!ds || ds.length === 0) {
+    hienKetQuaMentor(0);
+    container.innerHTML = `<div class="rong">
+      <div class="rong-hinh"><svg viewBox="0 0 140 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="52" r="28" fill="#e8f0fe"/>
+        <circle cx="50" cy="42" r="14" fill="#1a73e8" opacity=".3"/>
+        <ellipse cx="50" cy="66" rx="20" ry="9" fill="#1a73e8" opacity=".15"/>
+        <circle cx="105" cy="48" r="22" fill="#dbeafe"/>
+        <circle cx="105" cy="40" r="11" fill="#1a73e8" opacity=".3"/>
+        <ellipse cx="105" cy="60" rx="16" ry="7" fill="#1a73e8" opacity=".15"/>
+        <path d="M78 54 L84 54" stroke="#1a73e8" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="3 2"/>
+      </svg></div>
+      <h3>Không tìm thấy mentor</h3>
+      <p>Thử thay đổi từ khóa hoặc xóa bộ lọc</p>
+    </div>`;
+    return;
+  }
+
+  hienKetQuaMentor(ds.length);
   container.innerHTML = ds.map(taoTheMentor).join('');
 }
 

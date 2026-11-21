@@ -25,6 +25,33 @@
           <div class="auth-item"><span class="auth-icon">💬</span><span>Cộng đồng chia sẻ kiến thức sôi nổi</span></div>
           <div class="auth-item"><span class="auth-icon">🏫</span><span>Mạng lưới alumni toàn trường</span></div>
         </div>
+        <!-- Hình minh hoạ -->
+        <div class="auth-hinh">
+          <svg viewBox="0 0 240 170" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Nhóm người -->
+            <circle cx="60" cy="65" r="24" fill="rgba(255,255,255,0.2)"/>
+            <circle cx="60" cy="56" r="12" fill="rgba(255,255,255,0.5)"/>
+            <ellipse cx="60" cy="78" rx="18" ry="8" fill="rgba(255,255,255,0.3)"/>
+            <circle cx="120" cy="55" r="30" fill="rgba(255,255,255,0.15)"/>
+            <circle cx="120" cy="44" r="15" fill="rgba(255,255,255,0.4)"/>
+            <ellipse cx="120" cy="70" rx="22" ry="10" fill="rgba(255,255,255,0.25)"/>
+            <circle cx="180" cy="65" r="24" fill="rgba(255,255,255,0.2)"/>
+            <circle cx="180" cy="56" r="12" fill="rgba(255,255,255,0.5)"/>
+            <ellipse cx="180" cy="78" rx="18" ry="8" fill="rgba(255,255,255,0.3)"/>
+            <!-- Đường kết nối -->
+            <path d="M84 65 C95 60 108 60 118 65" stroke="rgba(255,255,255,0.6)" stroke-width="2" stroke-dasharray="4 3" stroke-linecap="round"/>
+            <path d="M122 65 C132 60 150 60 162 65" stroke="rgba(255,255,255,0.6)" stroke-width="2" stroke-dasharray="4 3" stroke-linecap="round"/>
+            <!-- Huy hiệu tốt nghiệp -->
+            <rect x="88" y="92" width="64" height="50" rx="10" fill="rgba(255,255,255,0.15)"/>
+            <text x="120" y="122" text-anchor="middle" font-size="22" fill="rgba(255,255,255,0.8)">🎓</text>
+            <rect x="96" y="132" width="48" height="6" rx="3" fill="rgba(255,255,255,0.3)"/>
+            <!-- Dấu check thành công -->
+            <circle cx="30" cy="130" r="14" fill="rgba(255,255,255,0.2)"/>
+            <text x="30" y="135" text-anchor="middle" font-size="13">✅</text>
+            <circle cx="210" cy="125" r="14" fill="rgba(255,255,255,0.2)"/>
+            <text x="210" y="130" text-anchor="middle" font-size="13">⭐</text>
+          </svg>
+        </div>
       </div>
       <div class="auth-phai">
         <!-- Form Đăng Nhập -->
@@ -116,6 +143,26 @@
     <!-- ===== TRANG CHỦ ===== -->
     <div id="trang-chu" class="trang">
       <div class="hero-block">
+        <!-- Hình minh hoạ nền hero -->
+        <div class="hero-hinh">
+          <svg width="420" height="320" viewBox="0 0 420 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="300" cy="140" r="120" fill="rgba(255,255,255,0.06)"/>
+            <circle cx="300" cy="140" r="85" fill="rgba(255,255,255,0.06)"/>
+            <circle cx="300" cy="140" r="50" fill="rgba(255,255,255,0.08)"/>
+            <circle cx="300" cy="118" r="30" fill="rgba(255,255,255,0.3)"/>
+            <ellipse cx="300" cy="160" rx="45" ry="18" fill="rgba(255,255,255,0.15)"/>
+            <circle cx="160" cy="80" r="22" fill="rgba(255,255,255,0.2)"/>
+            <circle cx="160" cy="68" r="11" fill="rgba(255,255,255,0.4)"/>
+            <ellipse cx="160" cy="94" rx="16" ry="7" fill="rgba(255,255,255,0.2)"/>
+            <circle cx="380" cy="250" r="18" fill="rgba(255,255,255,0.15)"/>
+            <circle cx="90" cy="220" r="15" fill="rgba(255,255,255,0.12)"/>
+            <path d="M182 86 C210 80 250 90 272 110" stroke="rgba(255,255,255,0.3)" stroke-width="2" stroke-dasharray="6 4"/>
+            <rect x="60" y="230" width="120" height="60" rx="12" fill="rgba(255,255,255,0.1)"/>
+            <rect x="70" y="242" width="70" height="7" rx="3.5" fill="rgba(255,255,255,0.3)"/>
+            <rect x="70" y="254" width="50" height="5" rx="2.5" fill="rgba(255,255,255,0.2)"/>
+            <rect x="70" y="265" width="80" height="16" rx="8" fill="rgba(255,255,255,0.2)"/>
+          </svg>
+        </div>
         <div class="hero-noi-dung">
           <h1>Khám phá cơ hội nghề nghiệp<br>từ cộng đồng Alumni 🎓</h1>
           <p>Kết nối với hàng nghìn cựu sinh viên, tìm kiếm việc làm phù hợp và học hỏi từ những người đi trước.</p>
@@ -159,8 +206,96 @@
       </div>
       <div id="viecLamTrangChu" class="luoi-viec"></div>
 
+      <!-- Banner kết nối mentor -->
+      <div class="section-banner" style="margin-top:48px">
+        <div class="section-banner-nd">
+          <h2>🤝 Kết Nối Với Mentor Giàu Kinh Nghiệm</h2>
+          <p>Hàng trăm cựu sinh viên đang sẵn sàng chia sẻ kinh nghiệm, tư vấn nghề nghiệp và hỗ trợ bạn trên con đường sự nghiệp.</p>
+          <button class="btn btn-xanh" onclick="hienTrang('mentor')">Tìm Mentor Ngay →</button>
+        </div>
+        <div class="section-banner-hinh">
+          <svg viewBox="0 0 220 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="80" cy="60" r="36" fill="#1a73e8" opacity=".15"/>
+            <circle cx="80" cy="60" r="26" fill="#1a73e8" opacity=".25"/>
+            <circle cx="80" cy="52" r="14" fill="#1a73e8" opacity=".6"/>
+            <ellipse cx="80" cy="80" rx="22" ry="10" fill="#1a73e8" opacity=".3"/>
+            <circle cx="160" cy="50" r="28" fill="#0d47a1" opacity=".15"/>
+            <circle cx="160" cy="50" r="20" fill="#0d47a1" opacity=".25"/>
+            <circle cx="160" cy="43" r="11" fill="#0d47a1" opacity=".6"/>
+            <ellipse cx="160" cy="66" rx="18" ry="8" fill="#0d47a1" opacity=".3"/>
+            <path d="M106 62 C115 58 130 58 142 62" stroke="#1a73e8" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="4 3"/>
+            <circle cx="124" cy="58" r="5" fill="#4a9eff"/>
+            <text x="124" y="61" text-anchor="middle" font-size="6" fill="white" font-weight="bold">✓</text>
+            <rect x="50" y="98" width="120" height="44" rx="10" fill="#1a73e8" opacity=".1"/>
+            <rect x="58" y="106" width="60" height="6" rx="3" fill="#1a73e8" opacity=".4"/>
+            <rect x="58" y="118" width="40" height="4" rx="2" fill="#1a73e8" opacity=".25"/>
+            <rect x="130" y="106" width="32" height="28" rx="6" fill="#1a73e8" opacity=".2"/>
+            <text x="146" y="124" text-anchor="middle" font-size="12" fill="#1a73e8" opacity=".7">🤝</text>
+          </svg>
+        </div>
+      </div>
+
+      <!-- 3 tính năng nổi bật -->
+      <div class="banner-tinh-nang">
+        <div class="banner-item">
+          <div class="banner-hinh">
+            <svg viewBox="0 0 180 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="20" y="20" width="140" height="80" rx="10" fill="#e8f0fe"/>
+              <rect x="30" y="32" width="80" height="8" rx="4" fill="#1a73e8" opacity=".5"/>
+              <rect x="30" y="46" width="60" height="6" rx="3" fill="#1a73e8" opacity=".3"/>
+              <rect x="30" y="58" width="70" height="6" rx="3" fill="#1a73e8" opacity=".25"/>
+              <rect x="30" y="70" width="50" height="6" rx="3" fill="#1a73e8" opacity=".2"/>
+              <circle cx="140" cy="40" r="20" fill="#1a73e8" opacity=".15"/>
+              <text x="140" y="46" text-anchor="middle" font-size="18">💼</text>
+              <rect x="100" y="78" width="48" height="16" rx="8" fill="#1a73e8"/>
+              <text x="124" y="90" text-anchor="middle" font-size="8" fill="white" font-weight="600">Ứng tuyển</text>
+            </svg>
+          </div>
+          <h3>Tìm Việc Làm Dễ Dàng</h3>
+          <p>Hàng trăm tin tuyển dụng chất lượng từ các doanh nghiệp uy tín, được kiểm duyệt bởi đội ngũ quản trị.</p>
+        </div>
+        <div class="banner-item">
+          <div class="banner-hinh">
+            <svg viewBox="0 0 180 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="60" cy="50" r="28" fill="#e8f0fe"/>
+              <circle cx="60" cy="42" r="14" fill="#1a73e8" opacity=".4"/>
+              <ellipse cx="60" cy="66" rx="20" ry="8" fill="#1a73e8" opacity=".2"/>
+              <circle cx="120" cy="45" r="22" fill="#dbeafe"/>
+              <circle cx="120" cy="38" r="11" fill="#1a73e8" opacity=".4"/>
+              <ellipse cx="120" cy="58" rx="16" ry="7" fill="#1a73e8" opacity=".2"/>
+              <path d="M88 55 L96 55" stroke="#1a73e8" stroke-width="2" stroke-linecap="round"/>
+              <circle cx="92" cy="55" r="6" fill="#4a9eff" opacity=".8"/>
+              <text x="92" y="58" text-anchor="middle" font-size="7" fill="white">🌟</text>
+              <rect x="30" y="85" width="120" height="22" rx="8" fill="#1a73e8" opacity=".1"/>
+              <text x="90" y="100" text-anchor="middle" font-size="10" fill="#1a73e8" font-weight="600">Kết nối Mentor</text>
+            </svg>
+          </div>
+          <h3>Kết Nối Mentor</h3>
+          <p>Tìm kiếm và kết nối với cựu sinh viên có kinh nghiệm trong lĩnh vực bạn quan tâm để được tư vấn trực tiếp.</p>
+        </div>
+        <div class="banner-item">
+          <div class="banner-hinh">
+            <svg viewBox="0 0 180 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="15" y="15" width="150" height="90" rx="12" fill="#e8f0fe"/>
+              <circle cx="38" cy="38" r="14" fill="#1a73e8" opacity=".3"/>
+              <text x="38" y="43" text-anchor="middle" font-size="12">👤</text>
+              <rect x="58" y="30" width="90" height="6" rx="3" fill="#1a73e8" opacity=".4"/>
+              <rect x="58" y="42" width="70" height="5" rx="2.5" fill="#1a73e8" opacity=".25"/>
+              <rect x="20" y="62" width="140" height="1" fill="#1a73e8" opacity=".1"/>
+              <text x="30" y="80" font-size="11" fill="#1a73e8" opacity=".5">💬</text>
+              <rect x="45" y="72" width="90" height="6" rx="3" fill="#1a73e8" opacity=".2"/>
+              <rect x="45" y="82" width="70" height="5" rx="2.5" fill="#1a73e8" opacity=".15"/>
+              <circle cx="150" cy="30" r="8" fill="#f39c12"/>
+              <text x="150" y="34" text-anchor="middle" font-size="8" fill="white" font-weight="700">3</text>
+            </svg>
+          </div>
+          <h3>Cộng Đồng Chia Sẻ</h3>
+          <p>Đặt câu hỏi, chia sẻ kinh nghiệm và tham gia thảo luận trong cộng đồng sinh viên và cựu sinh viên sôi nổi.</p>
+        </div>
+      </div>
+
       <!-- Bài viết nổi bật -->
-      <div class="tieu-de-trang" style="margin-top:48px">
+      <div class="tieu-de-trang" style="margin-top:16px">
         <div><h2>💬 Bài Viết Nổi Bật</h2><p>Chia sẻ kinh nghiệm và tư vấn từ cựu sinh viên</p></div>
         <button class="btn btn-vien" onclick="hienTrang('cong-dong')">Xem tất cả →</button>
       </div>
@@ -175,16 +310,32 @@
       </div>
 
       <!-- Bộ lọc -->
-      <div class="bo-loc">
-        <input type="text" id="timKiemViec" placeholder="🔍  Tìm theo tên, mô tả...">
-        <select id="loaiViecLoc">
-          <option value="">📋 Tất cả loại hình</option>
-          <option value="Internship">🎓 Thực tập</option>
-          <option value="Full-time">⏰ Toàn thời gian</option>
-          <option value="Part-time">🕐 Bán thời gian</option>
-        </select>
-        <input type="text" id="diaDiemViecLoc" placeholder="📍 Địa điểm...">
-        <button class="btn btn-xanh" onclick="taiDanhSachViec()">🔍 Tìm</button>
+      <!-- Bộ lọc việc làm -->
+      <div class="khung-timkiem">
+        <div class="khung-timkiem-tieude">🔍 Tìm kiếm & Lọc</div>
+        <div class="hang-timkiem">
+          <div class="o-timkiem-chinh">
+            <span class="icon-search">🔍</span>
+            <input type="text" id="timKiemViec" placeholder="Nhập tên việc làm, kỹ năng, công ty..." oninput="debounceTimKiemViec()">
+          </div>
+          <div class="o-loc">
+            <select id="loaiViecLoc" onchange="taiDanhSachViec()">
+              <option value="">📋 Tất cả loại hình</option>
+              <option value="Internship">🎓 Thực tập</option>
+              <option value="Full-time">⏰ Toàn thời gian</option>
+              <option value="Part-time">🕐 Bán thời gian</option>
+            </select>
+          </div>
+          <div class="o-loc">
+            <input type="text" id="diaDiemViecLoc" placeholder="📍 Địa điểm..." oninput="debounceTimKiemViec()">
+          </div>
+          <button class="btn-timkiem" onclick="taiDanhSachViec()">🔍 Tìm kiếm</button>
+          <button class="btn-xoa-tk" onclick="xoaTimKiemViec()">✕ Xóa</button>
+        </div>
+        <div class="ket-qua-timkiem" id="ketQuaViec" style="display:none">
+          Tìm thấy <span class="so-ket-qua" id="soKetQuaViec">0</span> việc làm
+          <div id="tagLocViec"></div>
+        </div>
       </div>
 
       <!-- Form tạo việc làm -->
@@ -231,16 +382,29 @@
         <button class="btn btn-xanh" onclick="batTatFormBai()">✏️ Viết Bài Mới</button>
       </div>
 
-      <div class="bo-loc">
-        <input type="text" id="timKiemBai" placeholder="🔍  Tìm kiếm bài viết...">
-        <select id="danhMucBaiLoc">
-          <option value="">📋 Tất cả danh mục</option>
-          <option value="Experience">💡 Kinh nghiệm</option>
-          <option value="Question">❓ Câu hỏi</option>
-          <option value="CareerAdvice">🎯 Tư vấn nghề nghiệp</option>
-          <option value="JobShare">💼 Chia sẻ việc làm</option>
-        </select>
-        <button class="btn btn-xanh" onclick="taiDanhSachBai()">🔍 Tìm</button>
+      <!-- Bộ lọc bài viết -->
+      <div class="khung-timkiem">
+        <div class="khung-timkiem-tieude">🔍 Tìm kiếm bài viết</div>
+        <div class="hang-timkiem">
+          <div class="o-timkiem-chinh">
+            <span class="icon-search">🔍</span>
+            <input type="text" id="timKiemBai" placeholder="Tìm theo tiêu đề, nội dung..." oninput="debounceTimKiemBai()">
+          </div>
+          <div class="o-loc">
+            <select id="danhMucBaiLoc" onchange="taiDanhSachBai()">
+              <option value="">📋 Tất cả danh mục</option>
+              <option value="Experience">💡 Kinh nghiệm</option>
+              <option value="Question">❓ Câu hỏi</option>
+              <option value="CareerAdvice">🎯 Tư vấn nghề nghiệp</option>
+              <option value="JobShare">💼 Chia sẻ việc làm</option>
+            </select>
+          </div>
+          <button class="btn-timkiem" onclick="taiDanhSachBai()">🔍 Tìm kiếm</button>
+          <button class="btn-xoa-tk" onclick="xoaTimKiemBai()">✕ Xóa</button>
+        </div>
+        <div class="ket-qua-timkiem" id="ketQuaBai" style="display:none">
+          Tìm thấy <span class="so-ket-qua" id="soKetQuaBai">0</span> bài viết
+        </div>
       </div>
 
       <!-- Form viết bài -->
@@ -278,11 +442,25 @@
         <button class="btn btn-vien" id="btnDangKyMentor" onclick="batTatDangKyMentor()">🌟 Đăng Ký Làm Mentor</button>
       </div>
 
-      <div class="bo-loc">
-        <input type="text" id="timKiemMentor" placeholder="🔍  Tìm theo tên, công ty...">
-        <input type="text" id="chuyenNganhMentor" placeholder="📚 Chuyên ngành...">
-        <input type="text" id="kyNangMentor" placeholder="⚡ Kỹ năng (VD: React, Python...)">
-        <button class="btn btn-xanh" onclick="taiDanhSachMentor()">🔍 Tìm</button>
+      <div class="khung-timkiem">
+        <div class="khung-timkiem-tieude">🔍 Tìm kiếm Mentor</div>
+        <div class="hang-timkiem">
+          <div class="o-timkiem-chinh">
+            <span class="icon-search">🔍</span>
+            <input type="text" id="timKiemMentor" placeholder="Tìm theo tên, công ty, chuyên ngành..." oninput="debounceTimKiemMentor()">
+          </div>
+          <div class="o-loc">
+            <input type="text" id="chuyenNganhMentor" placeholder="📚 Chuyên ngành..." oninput="debounceTimKiemMentor()">
+          </div>
+          <div class="o-loc">
+            <input type="text" id="kyNangMentor" placeholder="⚡ Kỹ năng (React, Python...)" oninput="debounceTimKiemMentor()">
+          </div>
+          <button class="btn-timkiem" onclick="taiDanhSachMentor()">🔍 Tìm kiếm</button>
+          <button class="btn-xoa-tk" onclick="xoaTimKiemMentor()">✕ Xóa</button>
+        </div>
+        <div class="ket-qua-timkiem" id="ketQuaMentor" style="display:none">
+          Tìm thấy <span class="so-ket-qua" id="soKetQuaMentor">0</span> mentor
+        </div>
       </div>
 
       <!-- Form gửi yêu cầu mentor -->
