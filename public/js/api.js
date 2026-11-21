@@ -44,6 +44,7 @@ const rutHoSoAPI = (id) => goiAPI(`/applications/${id}/withdraw`, 'PUT', {});
 // ===== BÀI VIẾT =====
 const taoBaiVietAPI = (dl) => goiAPI('/posts', 'POST', dl);
 const layDanhSachBaiAPI = (params = {}) => goiAPI(`/posts?${new URLSearchParams(params)}`);
+const layChiTietBaiAPI = (id) => goiAPI(`/posts/${id}`);
 const capNhatBaiVietAPI = (id, dl) => goiAPI(`/posts/${id}`, 'PUT', dl);
 const taoBinhLuanAPI = (postId, nd) => goiAPI(`/posts/${postId}/comments`, 'POST', { content: nd });
 const thichBaiAPI = (postId) => goiAPI(`/posts/${postId}/like`, 'POST', {});

@@ -368,7 +368,7 @@ function taoTheBai(bai) {
   const tac = bai.authorId?.email || 'Ẩn danh';
   const chu = tac.charAt(0).toUpperCase();
   return `
-  <div class="the-bai">
+  <div class="the-bai" id="bai-${bai._id}">
     <div class="bai-dau">
       <div class="avatar-bai">${chu}</div>
       <div class="bai-tacgia">
@@ -380,14 +380,106 @@ function taoTheBai(bai) {
     <div class="bai-tieude">${bai.title}</div>
     <div class="bai-noidung">${bai.content}</div>
     <div class="bai-chan">
-      <button class="nut-tuongtac" onclick="thichBai('${bai._id}')">❤️ ${bai.likeCount||0} Thích</button>
-      <button class="nut-tuongtac" onclick="binhLuanBai('${bai._id}')">💬 ${bai.commentCount||0} Bình luận</button>
+      <button class="nut-tuongtac ${bai._likedByMe ? 'da-thich' : ''}" onclick="thichBai('${bai._id}', this)">
+        ❤️ <span class="so-thich">${bai.likeCount||0}</span> Thích
+      </button>
+      <button class="nut-tuongtac" onclick="batTatBinhLuan('${bai._id}')">
+        💬 <span id="soBinhLuan-${bai._id}">${bai.commentCount||0}</span> Bình luận
+      </button>
       <button class="nut-tuongtac" onclick="baoCaoNoiDung('Post','${bai._id}')">🚩 Báo cáo</button>
+    </div>
+
+    <!-- Khung bình luận (ẩn mặc định) -->
+    <div class="khung-binhluan an" id="khungBL-${bai._id}">
+      <!-- Danh sách bình luận -->
+      <div class="ds-binhluan" id="dsBL-${bai._id}">
+        <div style="text-align:center;color:var(--xam-5);padding:12px;font-size:13px">Đang tải bình luận...</div>
+      </div>
+      <!-- Form nhập bình luận mới -->
+      <div class="form-binhluan">
+        <div class="avatar-nho" id="avatarBL-${bai._id}">U</div>
+        <div class="o-nhap-bl">
+          <input type="text" class="input-binhluan" id="inputBL-${bai._id}"
+            placeholder="Viết bình luận..."
+            onkeydown="if(event.key==='Enter' && !event.shiftKey) { event.preventDefault(); guiBinhLuan('${bai._id}'); }">
+          <button class="btn-gui-bl" onclick="guiBinhLuan('${bai._id}')">Gửi</button>
+        </div>
+      </div>
     </div>
   </div>`;
 }
 
-async function taiDanhSachBai() {
+// Bật/tắt khung bình luận
+async function batTatBinhLuan(baiId) {
+  const khung = document.getElementById('khungBL-' + baiId);
+  const dangAn = khung.classList.contains('an');
+
+  if (dangAn) {
+    khung.classList.remove('an');
+    // Set avatar người dùng
+    const chu = nguoiDungHienTai?.email?.charAt(0).toUpperCase() || 'U';
+    const avEl = document.getElementById('avatarBL-' + baiId);
+    if (avEl) avEl.textContent = chu;
+    // Tải bình luận
+    await taiDanhSachBinhLuan(baiId);
+  } else {
+    khung.classList.add('an');
+  }
+}
+
+// Tải danh sách bình luận
+async function taiDanhSachBinhLuan(baiId) {
+  const container = document.getElementById('dsBL-' + baiId);
+  if (!container) return;
+
+  const kq = await layChiTietBaiAPI(baiId);
+  const binhLuans = kq?.comments || [];
+
+  if (binhLuans.length === 0) {
+    container.innerHTML = '<div style="text-align:center;color:var(--xam-5);padding:14px;font-size:13px">Chưa có bình luận nào. Hãy là người đầu tiên! 💬</div>';
+    return;
+  }
+
+  container.innerHTML = binhLuans.map(bl => {
+    const chu = bl.userId?.email?.charAt(0).toUpperCase() || 'U';
+    return `
+    <div class="muc-binhluan">
+      <div class="avatar-bl">${chu}</div>
+      <div class="noidung-bl">
+        <div class="ten-bl">${bl.userId?.email || 'Ẩn danh'}</div>
+        <div class="text-bl">${bl.content}</div>
+        <div class="thoigian-bl">${formatThoiGian(bl.createdAt)}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Cuộn xuống cuối danh sách bình luận
+  container.scrollTop = container.scrollHeight;
+}
+
+// Gửi bình luận mới
+async function guiBinhLuan(baiId) {
+  const input = document.getElementById('inputBL-' + baiId);
+  const nd = input?.value.trim();
+  if (!nd) return;
+
+  input.value = '';
+  input.disabled = true;
+
+  const kq = await taoBinhLuanAPI(baiId, nd);
+  input.disabled = false;
+  input.focus();
+
+  if (kq) {
+    // Cập nhật số bình luận
+    const soEl = document.getElementById('soBinhLuan-' + baiId);
+    if (soEl) soEl.textContent = parseInt(soEl.textContent || 0) + 1;
+    // Tải lại danh sách
+    await taiDanhSachBinhLuan(baiId);
+  } else {
+    hienToast('Không gửi được bình luận', 'loi');
+  }
+}
   const tim = document.getElementById('timKiemBai')?.value.trim() || '';
   const dm = document.getElementById('danhMucBaiLoc')?.value || '';
   const container = document.getElementById('danhSachBai');
@@ -446,14 +538,18 @@ async function taoBaiViet() {
   else hienToast(kq?.message || 'Đăng bài thất bại', 'loi');
 }
 
-async function thichBai(id) {
+async function thichBai(id, btn) {
   const kq = await thichBaiAPI(id);
-  if (kq) taiDanhSachBai();
-}
-
-function binhLuanBai(id) {
-  const nd = prompt('💬 Nhập bình luận của bạn:');
-  if (nd?.trim()) taoBinhLuanAPI(id, nd).then(kq => { if(kq) { hienToast('Đã đăng bình luận!'); taiDanhSachBai(); } });
+  if (kq?.post) {
+    // Cập nhật số thích trên nút luôn, không reload cả trang
+    const soEl = btn?.querySelector('.so-thich');
+    if (soEl) soEl.textContent = kq.post.likeCount || 0;
+    if (kq.message?.includes('unliked')) {
+      btn?.classList.remove('da-thich');
+    } else {
+      btn?.classList.add('da-thich');
+    }
+  }
 }
 
 function baoCaoNoiDung(loai, id) {

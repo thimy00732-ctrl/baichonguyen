@@ -465,3 +465,123 @@ table tr:last-child td { border-bottom:none; }
 .the-viec.noi-bat { border-color:var(--xanh); border-width:2px; }
 .the-viec.noi-bat::before { content:'ðŸ”¥ Ná»•i báº­t'; position:absolute; top:16px; right:16px; background:linear-gradient(135deg,#ff6b35,#f7c59f); color:#fff; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:600; }
 .the-viec { position:relative; }
+
+/* ===== BÌNH LU?N INLINE ===== */
+.khung-binhluan {
+  margin-top: 16px;
+  border-top: 1px solid var(--xam-1);
+  padding-top: 16px;
+  animation: truotXuong .2s ease;
+}
+@keyframes truotXuong {
+  from { opacity:0; transform:translateY(-8px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+/* Danh sách bình lu?n */
+.ds-binhluan {
+  max-height: 280px;
+  overflow-y: auto;
+  margin-bottom: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-right: 4px;
+}
+.ds-binhluan::-webkit-scrollbar { width: 4px; }
+.ds-binhluan::-webkit-scrollbar-track { background: var(--xam-1); border-radius: 4px; }
+.ds-binhluan::-webkit-scrollbar-thumb { background: var(--xam-3); border-radius: 4px; }
+
+/* M?i bình lu?n */
+.muc-binhluan {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.avatar-bl {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1a73e8, #0d47a1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+.noidung-bl {
+  background: var(--xam-1);
+  border-radius: 12px;
+  padding: 10px 14px;
+  flex: 1;
+}
+.ten-bl {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--xam-dam);
+  margin-bottom: 4px;
+}
+.text-bl {
+  font-size: 14px;
+  color: var(--xam-7);
+  line-height: 1.5;
+}
+.thoigian-bl {
+  font-size: 11px;
+  color: var(--xam-5);
+  margin-top: 5px;
+}
+
+/* Form nh?p bình lu?n */
+.form-binhluan {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  background: var(--xam-1);
+  border-radius: 12px;
+  padding: 8px 8px 8px 12px;
+  border: 1.5px solid var(--xam-3);
+  transition: border-color .2s;
+}
+.form-binhluan:focus-within {
+  border-color: var(--xanh);
+  background: white;
+  box-shadow: 0 0 0 3px rgba(26,115,232,.1);
+}
+.o-nhap-bl {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex: 1;
+}
+.input-binhluan {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--xam-7);
+  outline: none;
+}
+.input-binhluan::placeholder { color: var(--xam-5); }
+.btn-gui-bl {
+  background: var(--xanh);
+  color: white;
+  border: none;
+  padding: 7px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .2s;
+  white-space: nowrap;
+}
+.btn-gui-bl:hover { background: var(--xanh-dam); }
+
+/* Nút thích dã thích */
+.nut-tuongtac.da-thich {
+  color: #e74c3c;
+  background: #fdecea;
+}
