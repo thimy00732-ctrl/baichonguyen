@@ -688,6 +688,63 @@
   </div>
 </div>
 
+<!-- Modal: Job Details -->
+<div id="modalChiTietViec" class="modal an">
+  <div class="modal-overlay" onclick="dongModalChiTiet()"></div>
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 id="tieuDeChiTiet">Job Title</h2>
+      <button class="modal-close" onclick="dongModalChiTiet()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="noiDungChiTiet"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="dongModalChiTiet()">Close</button>
+      <button class="btn btn-primary" id="btnUngTuyenChiTiet">Apply now</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Apply for Job -->
+<div id="modalUngTuyen" class="modal an">
+  <div class="modal-overlay" onclick="dongModalUngTuyen()"></div>
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Apply for Job</h2>
+      <button class="modal-close" onclick="dongModalUngTuyen()">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="viecLamIdUngTuyen">
+      <p style="margin-bottom:20px">You are applying for: <strong id="tenViecUngTuyen"></strong></p>
+      
+      <div class="form-group">
+        <label>CV/Resume URL *</label>
+        <input type="url" id="linkCVUngTuyen" placeholder="https://drive.google.com/... or https://dropbox.com/...">
+      </div>
+      
+      <div class="form-group">
+        <label>Cover Letter</label>
+        <textarea id="thuGioiThieuUngTuyen" placeholder="Tell the employer why you're a great fit..." style="min-height:120px"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="dongModalUngTuyen()">Cancel</button>
+      <button class="btn btn-primary" onclick="guiHoSoUngTuyen()">Submit Application</button>
+    </div>
+  </div>
+</div>
+
+<!-- Notification Dropdown -->
+<div id="hopThongBao" class="dropdown-thongbao an">
+  <div class="dropdown-header">
+    <h3>Notifications</h3>
+  </div>
+  <div id="danhSachThongBao" class="dropdown-content">
+    <p style="text-align:center;color:var(--gray-500);padding:20px">No notifications</p>
+  </div>
+</div>
+
 <!-- Toast Notification -->
 <div id="toast" class="toast">
   <span id="toastIcon">✅</span>
